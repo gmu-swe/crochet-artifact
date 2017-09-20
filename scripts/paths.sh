@@ -27,5 +27,24 @@ export BUILD_SCRIPTS_DIR=$ROOT/scripts/build
 # wget command to download programs/data
 WGET="$(which wget) -nc"
 
+# JDKs
+export JDK7_DIR=$INSTALL_DIR/jdk7
+export JDK8_DIR=$INSTALL_DIR/jdk8
+
 # CROCHET repo
-export CROCHET_REPO=$ROOT/crochet
+export CROCHET_REPO=$ROOT/repos/crochet
+export CROCHET_BRANCH=master
+export CROCHET_DIR=$INSTALL_DIR/crochet
+
+# STM stuff
+export STMBENCH7_REPO=https://github.com/gmu-swe/jvstm-benchmarks.git
+export STMBENCH7_BRANCH=checkpoint
+export STMBENCH7_DIR=$INSTALL_DIR/stmbench7
+
+export JVSTM_REPO=https://github.com/inesc-id-esw/jvstm.git
+export JVSTM_BRANCH=master
+export JVSTM_DIR=$INSTALL_DIR/jvstm
+
+export DEUCE_REPO=https://github.com/gmu-swe/DeuceSTM.git
+export DEUCE_BRANCH=master
+export DEUCE_DIR=$INSTALL_DIR/deuce

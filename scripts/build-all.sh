@@ -8,5 +8,6 @@ pushd $BUILD_SCRIPTS_DIR
 {
     ./jdk.sh
     ./crochet.sh
+    ./stmbench7.sh
 }
 popd

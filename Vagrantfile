@@ -72,21 +72,13 @@ Vagrant.configure("2") do |config|
 
     pushd /vagrant/scripts
     {
-        # Download software packages
-        /vagrant/scripts/downloads.sh
-
         # Build all software
         /vagrant/scripts/build-all.sh
 
         # Prepare VM to run the experiments
         /vagrant/scripts/pre-run.sh
 
-        # Download data required for some experiments
-        /vagrant/scripts/data.sh
-
         popd
     }
   SHELL
-
-  config.vm.provision :reload
 end
