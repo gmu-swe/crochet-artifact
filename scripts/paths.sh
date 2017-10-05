@@ -36,6 +36,11 @@ export CROCHET_REPO=$ROOT/repos/crochet
 export CROCHET_BRANCH=master
 export CROCHET_DIR=$INSTALL_DIR/crochet
 
+# Microbenchmark repo
+export MICROBENCH_REPO=$ROOT/repos/ClassChangeMicroBenchmarks
+export MICROBENCH_BRANCH=master
+export MICROBENCH_DIR=$INSTALL_DIR/ClassChangeMicroBenchmarks
+
 # STM stuff
 export STMBENCH7_REPO=https://github.com/gmu-swe/jvstm-benchmarks.git
 export STMBENCH7_BRANCH=checkpoint

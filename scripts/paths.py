@@ -24,6 +24,9 @@ jvstmdir = getenv('JVSTM_DIR')
 # stmbench7
 stmbench7dir = getenv('STMBENCH7_DIR')
 
+# microbenchmarks
+microbenchdir = getenv('MICROBENCH_DIR')
+
 # deuce
 deucedir = getenv('DEUCE_DIR')
 
@@ -32,3 +35,6 @@ jdk7dir = getenv('JDK7_DIR')
 
 # jdk7
 jdk8dir = getenv('JDK8_DIR')
+
+# crochet
+crochetdir = getenv('CROCHET_DIR')
