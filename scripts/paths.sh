@@ -30,6 +30,7 @@ WGET="$(which wget) -nc"
 # JDKs
 export JDK7_DIR=$INSTALL_DIR/jdk7
 export JDK8_DIR=$INSTALL_DIR/jdk8
+export OPENJDK_DIR=$INSTALL_DIR/openjdk
 
 # CROCHET repo
 export CROCHET_REPO=$ROOT/repos/crochet

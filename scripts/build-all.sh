@@ -10,5 +10,6 @@ pushd $BUILD_SCRIPTS_DIR
     ./crochet.sh
     ./micro.sh
     ./stmbench7.sh
+    ./xj.sh
 }
 popd
