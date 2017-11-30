@@ -17,7 +17,7 @@ warmup = 0
 
 run_stmbench7_deuce="{jdk}/bin/java -Xbootclasspath:{stmbench7}/stmbench7/dist/rt-instrumented.jar:{deuce}/bin/deuceAgent.jar -Dorg.deuce.include=java.util.* -Dorg.deuce.transaction.contextClass={stm} -XX:-UseSplitVerifier {vmargs} -cp {stmbench7}/stmbench7/dist/stmbench7-1.2-instrumented.jar:{stmbench7}/stmbench7/lib/advice-runtime-1.8-SNAPSHOT.jar stmbench7.Benchmark {args}"
 
-run_stmbench7_native="{jdk}/bin/java -DnoCheckpoint {vmargs} -cp {stmbench7}/stmbench7/dist/stmbench7-1.2.jar:{stmbench7}/lib/advice-runtime-1.8-SNAPSHOT.jar:{stmbench7}/stmbench7/lib/crij.jar stmbench7.Benchmark {args}"
+run_stmbench7_native="{jdk}/bin/java -DnoCheckpoint {vmargs} -cp {stmbench7}/stmbench7/dist/stmbench7-1.2.jar:{stmbench7}/lib/advice-runtime-1.8-SNAPSHOT.jar:{stmbench7}/stmbench7/lib/crij.jar:{stmbench7}/stmbench7/lib/jvstm.jar stmbench7.Benchmark {args}"
 
 # Git commands to try
 def workloads() :
@@ -37,7 +37,15 @@ timeout = 3*60
 
 def runs() :
     return {
-        'native-nolock'     : {
+        'native-nolock' : {
+            'cmd'  : run_stmbench7_native.format(jdk=jdk8dir,
+                stmbench7=stmbench7dir,
+                vmargs="{} -DnoCheckpoint".format(vmargs),
+                args="-g none"),
+            'wrap' : '',
+            'env'  : { },
+            },
+        'native-nolock-checkpoint' : {
             'cmd'  : run_stmbench7_native.format(jdk=jdk8dir,
                 stmbench7=stmbench7dir,
                 vmargs=vmargs,
@@ -50,8 +58,54 @@ def runs() :
                 stmbench7=stmbench7dir,
                 deuce=deucedir,
                 stm="org.deuce.transaction.lsa.Context",
+                vmargs="{} -DnoCheckpoint".format(vmargs),
+                args="-g stm -s stmbench7.impl.deucestm.DeuceSTMInitializer"),
+            'wrap' : '',
+            'env'  : { },
+            },
+        'deuce-lsa-checkpoint' : {
+            'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
+                stmbench7=stmbench7dir,
+                deuce=deucedir,
+                stm="org.deuce.transaction.lsa.Context",
                 vmargs=vmargs,
                 args="-g stm -s stmbench7.impl.deucestm.DeuceSTMInitializer"),
+            'wrap' : '',
+            'env'  : { },
+            },
+        'deuce-tl2'     : {
+            'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
+                stmbench7=stmbench7dir,
+                deuce=deucedir,
+                stm="org.deuce.transaction.tl2.Context",
+                vmargs="{} -DnoCheckpoint".format(vmargs),
+                args="-g stm -s stmbench7.impl.deucestm.DeuceSTMInitializer"),
+            'wrap' : '',
+            'env'  : { },
+            },
+        'deuce-tl2-checkpoint' : {
+            'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
+                stmbench7=stmbench7dir,
+                deuce=deucedir,
+                stm="org.deuce.transaction.tl2.Context",
+                vmargs=vmargs,
+                args="-g stm -s stmbench7.impl.deucestm.DeuceSTMInitializer"),
+            'wrap' : '',
+            'env'  : { },
+            },
+        'jvstm'     : {
+            'cmd'  : run_stmbench7_native.format(jdk=jdk7dir,
+                stmbench7=stmbench7dir,
+                vmargs="{} -DnoCheckpoint".format(vmargs),
+                args="-g stm -s stmbench7.impl.deucestm.JVSTMInitializer"),
+            'wrap' : '',
+            'env'  : { },
+            },
+        'jvstm-checkpoint' : {
+            'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
+                stmbench7=stmbench7dir,
+                vmargs=vmargs,
+                args="-g stm -s stmbench7.impl.deucestm.JVSTMInitializer"),
             'wrap' : '',
             'env'  : { },
             },
