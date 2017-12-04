@@ -17,7 +17,9 @@ warmup = 0
 
 run_stmbench7_deuce="{jdk}/bin/java -Xbootclasspath:{stmbench7}/stmbench7/dist/rt-instrumented.jar:{deuce}/bin/deuceAgent.jar -Dorg.deuce.include=java.util.* -Dorg.deuce.transaction.contextClass={stm} -XX:-UseSplitVerifier {vmargs} -cp {stmbench7}/stmbench7/dist/stmbench7-1.2-instrumented.jar:{stmbench7}/stmbench7/lib/advice-runtime-1.8-SNAPSHOT.jar stmbench7.Benchmark {args}"
 
-run_stmbench7_native="{jdk}/bin/java -DnoCheckpoint {vmargs} -cp {stmbench7}/stmbench7/dist/stmbench7-1.2.jar:{stmbench7}/lib/advice-runtime-1.8-SNAPSHOT.jar:{stmbench7}/stmbench7/lib/crij.jar:{stmbench7}/stmbench7/lib/jvstm.jar stmbench7.Benchmark {args}"
+run_stmbench7_native="{jdk}/bin/java {vmargs} -cp {stmbench7}/stmbench7/dist/stmbench7-1.2.jar:{stmbench7}/stmbench7/lib/advice-runtime-1.8-SNAPSHOT.jar:{stmbench7}/stmbench7/lib/crij.jar:{stmbench7}/stmbench7/lib/jvstm.jar stmbench7.Benchmark {args}"
+
+run_stmbench7_crochet="{crochet}/target/jre-inst/bin/java {vmargs} -agentpath:{crochet}/target/libtagging.so -javaagent:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -Xbootclasspath/p:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -cp {stmbench7}/stmbench7/dist/stmbench7-1.2.jar:{stmbench7}/stmbench7/lib/advice-runtime-1.8-SNAPSHOT.jar:{stmbench7}/stmbench7/lib/crij.jar:{stmbench7}/stmbench7/lib/jvstm.jar stmbench7.Benchmark {args}"
 
 # Git commands to try
 def workloads() :
@@ -49,6 +51,24 @@ def runs() :
             'cmd'  : run_stmbench7_native.format(jdk=jdk8dir,
                 stmbench7=stmbench7dir,
                 vmargs=vmargs,
+                args="-g none"),
+            'wrap' : '',
+            'env'  : { },
+            },
+        'crochet-nolock' : {
+            'cmd'  : run_stmbench7_crochet.format(
+                crochet=crochetdir,
+                stmbench7=stmbench7dir,
+                vmargs="{} -DnoCheckpoint".format(vmargs),
+                args="-g none"),
+            'wrap' : '',
+            'env'  : { },
+            },
+        'crochet-nolock-checkpoint' : {
+            'cmd'  : run_stmbench7_crochet.format(
+                crochet=crochetdir,
+                stmbench7=stmbench7dir,
+                vmargs="{}".format(vmargs),
                 args="-g none"),
             'wrap' : '',
             'env'  : { },
@@ -97,15 +117,15 @@ def runs() :
             'cmd'  : run_stmbench7_native.format(jdk=jdk7dir,
                 stmbench7=stmbench7dir,
                 vmargs="{} -DnoCheckpoint".format(vmargs),
-                args="-g stm -s stmbench7.impl.deucestm.JVSTMInitializer"),
+                args="-g stm -s stmbench7.impl.jvstm.JVSTMInitializer"),
             'wrap' : '',
             'env'  : { },
             },
         'jvstm-checkpoint' : {
-            'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
+            'cmd'  : run_stmbench7_native.format(jdk=jdk7dir,
                 stmbench7=stmbench7dir,
                 vmargs=vmargs,
-                args="-g stm -s stmbench7.impl.deucestm.JVSTMInitializer"),
+                args="-g stm -s stmbench7.impl.jvstm.JVSTMInitializer"),
             'wrap' : '',
             'env'  : { },
             },
