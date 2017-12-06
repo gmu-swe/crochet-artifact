@@ -10,7 +10,7 @@ from run import run
 from paths import *
 
 # How many times should each run be repeated?
-times = 1
+times = 3
 
 # Number of warmup commands before starting to take measurements
 warmup = 0
@@ -24,9 +24,9 @@ run_stmbench7_crochet="{crochet}/target/jre-inst/bin/java {vmargs} -agentpath:{c
 # Git commands to try
 def workloads() :
     return {
-        'rw-no-traversals-10sec' : {
+        'rw-no-traversals' : {
             'bin'   : '',
-            'args'  : "-t 1 -l 10 -w rw --no-traversals",
+            'args'  : "-t 1 -l 30 -w rw --no-traversals",
             'clean' : [ ],
             'env'   : { }
             } ,
@@ -37,22 +37,24 @@ vmargs="-Xmx4G"
 # Max time any execution can take, in seconds
 timeout = 3*60
 
+pin='' # eg 'taskset -c 5,6,7'
+
 def runs() :
     return {
-        'native-nolock' : {
+        'native-nolock-jdk8' : {
             'cmd'  : run_stmbench7_native.format(jdk=jdk8dir,
                 stmbench7=stmbench7dir,
                 vmargs="{} -DnoCheckpoint".format(vmargs),
                 args="-g none"),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
-        'native-nolock-checkpoint' : {
-            'cmd'  : run_stmbench7_native.format(jdk=jdk8dir,
+        'native-nolock-jdk7' : {
+            'cmd'  : run_stmbench7_native.format(jdk=jdk7dir,
                 stmbench7=stmbench7dir,
-                vmargs=vmargs,
+                vmargs="{} -DnoCheckpoint".format(vmargs),
                 args="-g none"),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'crochet-nolock' : {
@@ -61,7 +63,7 @@ def runs() :
                 stmbench7=stmbench7dir,
                 vmargs="{} -DnoCheckpoint".format(vmargs),
                 args="-g none"),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'crochet-nolock-checkpoint' : {
@@ -70,7 +72,7 @@ def runs() :
                 stmbench7=stmbench7dir,
                 vmargs="{}".format(vmargs),
                 args="-g none"),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'deuce-lsa'     : {
@@ -80,7 +82,17 @@ def runs() :
                 stm="org.deuce.transaction.lsa.Context",
                 vmargs="{} -DnoCheckpoint".format(vmargs),
                 args="-g stm -s stmbench7.impl.deucestm.DeuceSTMInitializer"),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
+            'env'  : { },
+            },
+        'deuce-lsa-notx'     : {
+            'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
+                stmbench7=stmbench7dir,
+                deuce=deucedir,
+                stm="org.deuce.transaction.lsa.Context",
+                vmargs="{} -DnoCheckpoint -DnoTransactions".format(vmargs),
+                args="-g stm -s stmbench7.impl.deucestm.DeuceSTMInitializer"),
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'deuce-lsa-checkpoint' : {
@@ -90,7 +102,7 @@ def runs() :
                 stm="org.deuce.transaction.lsa.Context",
                 vmargs=vmargs,
                 args="-g stm -s stmbench7.impl.deucestm.DeuceSTMInitializer"),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'deuce-tl2'     : {
@@ -100,7 +112,17 @@ def runs() :
                 stm="org.deuce.transaction.tl2.Context",
                 vmargs="{} -DnoCheckpoint".format(vmargs),
                 args="-g stm -s stmbench7.impl.deucestm.DeuceSTMInitializer"),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
+            'env'  : { },
+            },
+        'deuce-tl2-notx'     : {
+            'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
+                stmbench7=stmbench7dir,
+                deuce=deucedir,
+                stm="org.deuce.transaction.tl2.Context",
+                vmargs="{} -DnoCheckpoint -DnoTransactions".format(vmargs),
+                args="-g stm -s stmbench7.impl.deucestm.DeuceSTMInitializer"),
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'deuce-tl2-checkpoint' : {
@@ -110,7 +132,7 @@ def runs() :
                 stm="org.deuce.transaction.tl2.Context",
                 vmargs=vmargs,
                 args="-g stm -s stmbench7.impl.deucestm.DeuceSTMInitializer"),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'jvstm'     : {
@@ -118,7 +140,15 @@ def runs() :
                 stmbench7=stmbench7dir,
                 vmargs="{} -DnoCheckpoint".format(vmargs),
                 args="-g stm -s stmbench7.impl.jvstm.JVSTMInitializer"),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
+            'env'  : { },
+            },
+        'jvstm-notx'     : {
+            'cmd'  : run_stmbench7_native.format(jdk=jdk7dir,
+                stmbench7=stmbench7dir,
+                vmargs="{} -DnoCheckpoint -DnoTransactions".format(vmargs),
+                args="-g stm -s stmbench7.impl.jvstm.JVSTMInitializer"),
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'jvstm-checkpoint' : {
@@ -126,7 +156,7 @@ def runs() :
                 stmbench7=stmbench7dir,
                 vmargs=vmargs,
                 args="-g stm -s stmbench7.impl.jvstm.JVSTMInitializer"),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
        }
