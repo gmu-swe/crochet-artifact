@@ -54,3 +54,6 @@ export JVSTM_DIR=$INSTALL_DIR/jvstm
 export DEUCE_REPO=https://github.com/gmu-swe/DeuceSTM.git
 export DEUCE_BRANCH=master
 export DEUCE_DIR=$INSTALL_DIR/deuce
+
+# CRIU dir to dump the checkpoints
+export CROCHET_CRIU_DIR=/home/ubuntu/criu-dump

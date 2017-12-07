@@ -26,6 +26,7 @@ run_bench="{jdk}/bin/java {vmargs} {{benchvmargs}} -jar {jar}/target/CRIJ-Microb
 
 jdk_vm="{}/bin/java".format(jdk8dir)
 crochet_vm="{crochet}/target/jre-inst/bin/java -agentpath:{crochet}/target/libtagging.so -javaagent:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -Xbootclasspath/p:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar".format(crochet=crochetdir)
+criu_vm="{jdk}/bin/java -agentpath:{crochet}/target/libcriu.so -Xbootclasspath/p:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar".format(jdk=jdk8dir,crochet=crochetdir)
 
 def workloads() :
     return {
@@ -130,6 +131,15 @@ def runs() :
                 benchclass='net.jonbell.bench.HashMapDeepCloneBench',
                 ),
             'wrap' : '',
+            'env'  : { },
+            },
+        'check-sum-criu' : {
+            'cmd'  : run_bench.format(
+                benchvm=criu_vm,
+                benchvmargs='-Dchecksum',
+                benchclass='net.jonbell.bench.CheckpointCRIUBench',
+                ),
+            'wrap' : 'sudo -E',
             'env'  : { },
             },
        }

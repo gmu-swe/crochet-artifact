@@ -2,6 +2,8 @@
 
 source ../paths.sh
 
+sudo apt-get install criu
+
 git clone $MICROBENCH_REPO $MICROBENCH_DIR
 pushd $MICROBENCH_DIR
 {
