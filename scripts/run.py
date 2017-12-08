@@ -15,6 +15,11 @@ def doRun(run, args, out, time, timeout):
     else:
         bin = run['cmd']
 
+    if 'vmargs' in args and args['vmargs'] is not '':
+        bin = bin.format(benchvmargs=args['vmargs'])
+    else:
+        bin = bin.format(benchvmargs='')
+
     command = "{} {} {}".format(run['wrap'], bin, args['args'])
     if 'expect' in args:
         command = args['expect'].format(cmd=command, log=time)

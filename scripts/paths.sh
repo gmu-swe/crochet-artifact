@@ -57,3 +57,5 @@ export DEUCE_DIR=$INSTALL_DIR/deuce
 
 # CRIU dir to dump the checkpoints
 export CROCHET_CRIU_DIR=/home/ubuntu/criu-dump
+
+export DACAPO_JAR=$ROOT/dacapo-9.12-bach.jar

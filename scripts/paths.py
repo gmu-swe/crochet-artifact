@@ -38,3 +38,5 @@ jdk8dir = getenv('JDK8_DIR')
 
 # crochet
 crochetdir = getenv('CROCHET_DIR')
+
+dacapojar = getenv('DACAPO_JAR')
