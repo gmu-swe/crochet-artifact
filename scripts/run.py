@@ -9,14 +9,17 @@ from signal import SIGKILL
 from monotonic import monotonic
 from time import sleep
 
-def doRun(run, args, out, time, timeout):
+def doRun(run, run_name, args, out, time, timeout):
     if 'bin' in args and args['bin'] is not '':
         bin = os.path.join(run['cmd'], args['bin'])
     else:
         bin = run['cmd']
 
     if 'vmargs' in args and args['vmargs'] is not '':
-        bin = bin.format(benchvmargs=args['vmargs'])
+        if isinstance(args['vmargs'], dict):
+            bin = bin.format(benchvmargs=args['vmargs'][run_name])
+        else:
+            bin = bin.format(benchvmargs=args['vmargs'])
     else:
         bin = bin.format(benchvmargs='')
 
@@ -71,10 +74,10 @@ def run(times, warmup, runs, commands, timeout, results_dir):
             for i in range(0,warmup):
                 print("warm {} {} {} - {}".format(name, run_name, i, datetime.datetime.now()))
                 with open('/dev/null', 'w') as devnull:
-                    doRun(run, comm, devnull, '/dev/null', timeout)
+                    doRun(run, run_name, comm, devnull, '/dev/null', timeout)
 
             for i in range(0,times):
                 print("run  {} {} {} - {}".format(name, run_name, i, datetime.datetime.now()))
                 with open(os.path.join(results, 'out-{}.txt'.format(i)), 'w') as out:
                     time = os.path.join(results, 'res-{}.txt'.format(i))
-                    doRun(run, comm, out, time, timeout)
+                    doRun(run, run_name, comm, out, time, timeout)

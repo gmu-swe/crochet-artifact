@@ -16,9 +16,8 @@ times = 3
 warmup = 0
 
 run_native="{jdk}/bin/java {vmargs} {{benchvmargs}} -cp {dacapojar} Harness {args}"
-run_crochet="{crochet}/target/jre-inst/bin/java {{vmargs}} -agentpath:{crochet}/target/libtagging.so -javaagent:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -Xbootclasspath/p:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -cp {{dacapojar}} Harness {{args}}".format(crochet=crochetdir)
+run_crochet="{crochet}/target/jre-inst/bin/java {{benchvmargs}} {vmargs} -agentpath:{crochet}/target/libtagging.so -javaagent:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -Xbootclasspath/p:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -cp {dacapojar} Harness {args}"
 
-# Git commands to try
 def workloads() :
     return {
         'avrora' : {
@@ -36,11 +35,13 @@ def workloads() :
         'eclipse' : {
             'bin'   : '',
             'args'  : "eclipse",
-            'vmargs': "\
+            'vmargs': { 'native': "\
  -Declipse.java.home={jdk7}\
  -javaagent:{crochet}/exp-scripts/lib/dacapo-eclipse-hacker-0.0.1-SNAPSHOT.jar\
  -Xbootclasspath/p:{crochet}/exp-scripts/lib/dacapo-eclipse-hacker-0.0.1-SNAPSHOT.jar\
  ".format(jdk7=jdk7dir, crochet=crochetdir),
+                        'crochet': "-Declipse.java.home={jdk7}/jre".format(jdk7=jdk7dir),
+                        },
             'clean' : [ ],
             'env'   : { }
             } ,
@@ -131,6 +132,7 @@ def runs() :
             },
         'crochet' : {
             'cmd'  : run_crochet.format(
+                crochet=crochetdir,
                 vmargs=vmargs,
                 args='-C -n 50 --scratch-directory=/tmp/dacapo-scratch',
                 dacapojar=dacapojar),
