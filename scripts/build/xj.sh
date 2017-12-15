@@ -2,7 +2,7 @@
 
 source ../paths.sh
 
-sudo apt-get install zip unzip libfreetype6-dev libcups2-dev libasound2-dev libx11-dev libxt-dev libxaw7-dev libxtst-dev libxrender-dev
+sudo apt-get install -y --force-yes zip unzip libfreetype6-dev libcups2-dev libasound2-dev libx11-dev libxt-dev libxaw7-dev libxtst-dev libxrender-dev
 
 unzip "$ROOT/openjdk.zip" -d $INSTALL_DIR
 pushd $OPENJDK_DIR
@@ -66,9 +66,9 @@ pushd $INSTALL_DIR/ruggedj
     ant
     pushd Benchmarks/synchroBench
     {
-        patch -p1 < synchrobench.patch
+        patch -p1 < $PATCH_DIR/synchrobench.patch
         PATH=$JDK7_DIR/bin:$PATH ant
-        sh preprocess.sh
+        PATH=$JDK7_DIR/bin:$PATH bash preprocess.sh
     }
     popd
 }
