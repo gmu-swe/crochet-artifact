@@ -64,6 +64,15 @@ pushd $INSTALL_DIR/ruggedj
 {
     export JAVA_HOME=$JDK7_DIR
     ant
+    pushd jvmti_agent
+    {
+        mkdir obj
+        patch -p1 < $PATCH_DIR/jvmti_agent_Makefile.patch
+        export JAVA_HOME=$JDK7_DIR
+        make
+    }
+    popd
+
     pushd Benchmarks/synchroBench
     {
         patch -p1 < $PATCH_DIR/synchrobench.patch
