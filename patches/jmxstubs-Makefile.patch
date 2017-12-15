@@ -1,0 +1,13 @@
+--- a/jdk/make/com/sun/jmx/Makefile	2017-10-19 10:16:27.070325962 +0000
+--- b/jdk/make/com/sun/jmx/Makefile	2017-10-19 10:18:18.542325962 +0000
+@@ -80,9 +80,7 @@
+ #
+ # Full class names of implementations requiring stubs
+ #
+-REMOTE_impls = \
+-    javax.management.remote.rmi.RMIConnectionImpl \
+-    javax.management.remote.rmi.RMIServerImpl \
++REMOTE_impls =
+ 
+ 
+ REMOTE_files = $(subst .,/,$(REMOTE_impls))
