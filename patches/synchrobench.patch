@@ -1,0 +1,44 @@
+--- a/src/trees/xj/TransactionalFriendlyTreeSet.java	2017-10-20 17:04:47.108503587 +0000
++++ b/src/trees/xj/TransactionalFriendlyTreeSet.java	2017-10-20 17:04:57.220503587 +0000
+@@ -49,7 +49,7 @@
+         }
+     }
+ 
+-    @sun.misc.Contended
++    //@sun.misc.Contended
+     private static class Node {
+         int key;
+         int localh, lefth, righth;
+--- a/src/contention/benchmark/ThreadSortedSetLoop.java	2017-10-20 17:04:13.580503587 +0000
++++ b/src/contention/benchmark/ThreadSortedSetLoop.java	2017-10-20 17:04:25.540503587 +0000
+@@ -15,7 +15,7 @@
+  * @author Vincent Gramoli
+  * 
+  */
+-@sun.misc.Contended
++//@sun.misc.Contended
+ public class ThreadSortedSetLoop implements Runnable {
+ 
+ 	/** The instance of the running benchmark */
+--- a/src/contention/benchmark/ThreadSetLoop.java	2017-10-20 17:02:41.572503587 +0000
++++ b/src/contention/benchmark/ThreadSetLoop.java	2017-10-20 17:02:52.332503587 +0000
+@@ -15,7 +15,7 @@
+  * @author Vincent Gramoli
+  * 
+  */
+-@sun.misc.Contended
++//@sun.misc.Contended
+ public class ThreadSetLoop implements Runnable {
+ 
+ 	/** The instance of the running benchmark */
+--- a/src/contention/benchmark/ThreadLoop.java	2017-10-20 17:02:13.700503587 +0000
++++ b/src/contention/benchmark/ThreadLoop.java	2017-10-20 17:02:24.152503587 +0000
+@@ -19,7 +19,7 @@
+  * @author Vincent Gramoli
+  * 
+  */
+-@sun.misc.Contended
++//@sun.misc.Contended
+ public class ThreadLoop implements Runnable {
+ 
+ 	/** The instance of the running benchmark */
