@@ -16,11 +16,21 @@ os.sys.path.insert(0, scripts_dir)
 
 def parse_file(path):
 
+    error = True
+
     with open(path, 'r') as f:
         for line in f:
+            if re.match('.*Invariants OK.$', line):
+                error = False
+                continue
+
             m = re.match('^Total throughput: (\d+\.\d+) op/s \((\d+\.\d+) op/s including failed\)$', line)
             if m is not None:
-                return (float(m.group(1)), float(m.group(2)))
+                if error:
+                    print("File {} has errors, skipping results".format(path))
+                    return None
+                else:
+                    return (float(m.group(1)), float(m.group(2)))
 
     return None
 
