@@ -32,6 +32,7 @@ def parse_file(path):
                 else:
                     return (float(m.group(1)), float(m.group(2)))
 
+    print("File {} has no results or has errors, skipping".format(path))
     return None
 
 def parse_results(paths):
