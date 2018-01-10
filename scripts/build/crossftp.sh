@@ -2,9 +2,6 @@
 
 source ../paths.sh
 
-# Deps
-sudo apt-get install -y --force-yes libpq-dev libpcap-dev
-
 # CrossFTP
 git clone $CROSSFTP_REPO $CROSSFTP_DIR
 pushd $CROSSFTP_DIR
@@ -15,24 +12,27 @@ pushd $CROSSFTP_DIR
     ant dist
 }
 
+$ROOT/experiments/ftp/ftpd.properties.sh  > $CROSSFTP_DIR/ftpd.properties
+$ROOT/experiments/ftp/users.properties.sh > $CROSSFTP_DIR/users.properties
+
 # Fuzzer
+
+# Deps
+sudo apt-get install -y --force-yes libpq-dev libpcap-dev
 
 # RVM/ruby/gems
 curl -sSL https://rvm.io/mpapis.asc | gpg --import -
 curl -sSL https://get.rvm.io | bash -s stable --ruby
-source /home/ubuntu/.rvm/scripts/rvm
+source $HOME/.rvm/scripts/rvm
 rvm install ruby-2.4.2
-gem install bundler
+rvm --default use 2.4.2
 
 # Metasploit
 git clone $METASPLOIT_REPO $METASPLOIT_DIR
 pushd $METASPLOIT_DIR
 {
     git checkout $METASPLOIT_BRANCH
-    pushd metasploit-framework
-    {
-        bundle install
-    }
-    popd
 }
 popd
+gem install bundler
+bundle install --gemfile=$METASPLOIT_DIR/Gemfile --system

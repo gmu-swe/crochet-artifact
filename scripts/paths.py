@@ -40,3 +40,9 @@ jdk8dir = getenv('JDK8_DIR')
 crochetdir = getenv('CROCHET_DIR')
 
 dacapojar = getenv('DACAPO_JAR')
+
+# metasploit
+metasploitdir = getenv('METASPLOIT_DIR')
+
+# crossftp
+crossftpdir = getenv('CROSSFTP_DIR')

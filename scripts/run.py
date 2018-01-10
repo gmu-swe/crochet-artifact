@@ -31,14 +31,34 @@ def doRun(run, run_name, args, out, time, timeout):
     env.update(run['env'])
     env.update(args['env'])
 
+    run_env = os.environ.copy()
+    run_env.update(env)
+
     out.write(str(env)+"\n")
+
+    server = None
+    if 'server' in run and run['server'] is not '':
+        out.write(run['server']+"\n")
+        out.write(str(datetime.datetime.now())+"\n")
+        out.write("\n\n\n")
+
+        server = subprocess.Popen(run['server'], env=run_env,
+                stdout=out, stderr=out, shell=True,
+                preexec_fn=os.setsid)
+
+        done = False
+        while not done:
+            with open(out.name, "r") as out2:
+                lines = out2.readlines()
+            for l in lines:
+                if run["server-start"] in l:
+                    done = True
+                    break
+
     out.write(command+"\n")
     out.write(str(datetime.datetime.now())+"\n")
     out.write("\n\n\n")
     out.flush()
-
-    run_env = os.environ.copy()
-    run_env.update(env)
 
     start = monotonic()
     if 'devnull' in run and run['devnull']:
@@ -53,6 +73,11 @@ def doRun(run, run_name, args, out, time, timeout):
 
     proc.wait()
     end = monotonic()
+
+    if server is not None:
+        os.killpg(os.getpgid(server.pid), SIGKILL)
+        server.wait()
+
 
     if not 'expect' in args:
         with open(time, 'a') as time:
