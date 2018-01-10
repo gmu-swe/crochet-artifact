@@ -59,3 +59,14 @@ export DEUCE_DIR=$INSTALL_DIR/deuce
 export CROCHET_CRIU_DIR=/home/ubuntu/criu-dump
 
 export DACAPO_JAR=$ROOT/dacapo-9.12-bach.jar
+
+# CROSSFTP repo
+export CROSSFTP_REPO=$ROOT/repos/crossftp
+export CROSSFTP_BRANCH=crochet-1.07
+export CROSSFTP_DIR=$INSTALL_DIR/crossftp
+
+# METASPLOIT repo
+export METASPLOIT_REPO=https://github.com/gmu-swe/metasploit-framework.git
+export METASPLOIT_BRANCH=ftp-fuzz
+export METASPLOIT_DIR=$INSTALL_DIR/metasploit
+
