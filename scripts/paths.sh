@@ -70,3 +70,12 @@ export METASPLOIT_REPO=https://github.com/gmu-swe/metasploit-framework.git
 export METASPLOIT_BRANCH=ftp-fuzz
 export METASPLOIT_DIR=$INSTALL_DIR/metasploit
 
+# H2 repo
+export H2_REPO=https://github.com/gmu-swe/h2database.git
+export H2_BRANCH=release-1.2.121
+export H2_DIR=$INSTALL_DIR/h2
+
+# DaCapo H2 repo
+export DACAPO_H2_REPO=$ROOT/repos/dacapo-h2
+export DACAPO_H2_BRANCH=master
+export DACAPO_H2_DIR=$INSTALL_DIR/dacapo-h2

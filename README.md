@@ -9,7 +9,8 @@
   * https://github.com/gmu-swe/crochet
 3. Clone the crochet microbenchmarks repo under `/repos` and adjust `MICROBENCH_BRANCH` in `scripts/paths.sh`
   * https://github.com/gmu-swe/ClassChangeMicroBenchmarks
-4. Get files `openjdk.zip` and `xj.zip` from the provided artifact, put them under `/`
+4. Clone the dacapo-h2 repo under `/repos`
+5. Get files `openjdk.zip` and `xj.zip` from the provided artifact, put them under `/`
 
 # Running the artifact
 
