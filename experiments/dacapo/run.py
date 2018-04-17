@@ -10,12 +10,12 @@ from run import run
 from paths import *
 
 # How many times should each run be repeated?
-times = 1
+times = globalTimes
 
 # Number of warmup commands before starting to take measurements
 warmup = 0
 
-vmargs="-Xmx4G"
+vmargs="{}".format(globalJvmParams)
 
 run_native="{jdk}/bin/java {vmargs} {{benchvmargs}} -Xbootclasspath/p:{crochet}/exp-scripts/lib/dacapo-eclipse-hacker-0.0.1-SNAPSHOT.jar -cp {dacapojar} Harness {args}"
 run_crochet="{crochet}/target/jre-inst/bin/java {{benchvmargs}} {vmargs} -agentpath:{crochet}/target/libtagging.so -javaagent:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -Xbootclasspath/p:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar:{crochet}/exp-scripts/lib/dacapo-eclipse-hacker-0.0.1-SNAPSHOT.jar -cp {dacapojar} Harness {args}"

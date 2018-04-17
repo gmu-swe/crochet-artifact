@@ -10,12 +10,12 @@ from run import run
 from paths import *
 
 # How many times should each run be repeated?
-times = 1
+times = globalTimes
 
 # Number of warmup commands before starting to take measurements
 warmup = 0
 
-vmargs="-Xmx4G"
+vmargs="{}".format(globalJvmParams)
 
 run_bench="{jdk}/bin/java {vmargs} {{benchvmargs}} -jar {jar}/target/CRIJ-Microbench-0.0.1-SNAPSHOT.jar --vm '{{benchvm}}' {opts} {{benchclass}}".format(
         jar=microbenchdir,

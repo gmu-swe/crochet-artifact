@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Root dir
-ROOT=/vagrant
+export ROOT=/vagrant
 
 # Where everything is downloaded
 export DOWNLOAD_DIR=$ROOT/downloads
@@ -35,13 +35,15 @@ export JDK7_DIR=$INSTALL_DIR/jdk7
 export JDK8_DIR=$INSTALL_DIR/jdk8
 export OPENJDK_DIR=$INSTALL_DIR/openjdk
 
+export REPOS_DIR=$ROOT/repos
+
 # CROCHET repo
-export CROCHET_REPO=$ROOT/repos/crochet
+export CROCHET_REPO=$REPOS_DIR/crochet
 export CROCHET_BRANCH=master
 export CROCHET_DIR=$INSTALL_DIR/crochet
 
 # Microbenchmark repo
-export MICROBENCH_REPO=$ROOT/repos/ClassChangeMicroBenchmarks
+export MICROBENCH_REPO=$REPOS_DIR/ClassChangeMicroBenchmarks
 export MICROBENCH_BRANCH=master
 export MICROBENCH_DIR=$INSTALL_DIR/ClassChangeMicroBenchmarks
 
@@ -62,10 +64,10 @@ export DEUCE_DIR=$INSTALL_DIR/deuce
 # CRIU dir to dump the checkpoints
 export CROCHET_CRIU_DIR=/home/ubuntu/criu-dump
 
-export DACAPO_JAR=$ROOT/dacapo-9.12-bach.jar
+export DACAPO_JAR=$ROOT/downloads/dacapo-9.12-bach.jar
 
 # CROSSFTP repo
-export CROSSFTP_REPO=$ROOT/repos/crossftp
+export CROSSFTP_REPO=$REPOS_DIR/crossftp
 export CROSSFTP_BRANCH=crochet-1.07
 export CROSSFTP_DIR=$INSTALL_DIR/crossftp
 
@@ -80,6 +82,12 @@ export H2_BRANCH=release-1.2.121
 export H2_DIR=$INSTALL_DIR/h2
 
 # DaCapo H2 repo
-export DACAPO_H2_REPO=$ROOT/repos/dacapo-h2
+export DACAPO_H2_REPO=$REPOS_DIR/dacapo-h2
 export DACAPO_H2_BRANCH=master
 export DACAPO_H2_DIR=$INSTALL_DIR/dacapo-h2
+
+# How many times to run each experiment?
+export GLOBAL_TIMES=1
+
+# Global JVM settings
+export GLOBAL_JVM_PARAMS="-Xmx4G"

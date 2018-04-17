@@ -53,3 +53,9 @@ crossftpdir = getenv('CROSSFTP_DIR')
 
 # dacapo-h2
 dacapoh2dir = getenv('DACAPO_H2_DIR')
+
+# global JVM args
+globalJvmParams = getenv('GLOBAL_JVM_PARAMS')
+
+# global JVM args
+globalTimes = int(getenv('GLOBAL_TIMES'))
