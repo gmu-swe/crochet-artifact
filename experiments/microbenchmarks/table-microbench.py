@@ -3,10 +3,15 @@ import re
 import os
 from subprocess import call
 
-RESULTS = "../results"
-SCRIPT = "../scripts/r/generateMicroTable.r"
-TMP_FILE = os.path.join(RESULTS,"aggregated-micro.csv")
-OUT_FILE = os.path.join(RESULTS,"table_micro.csv")
+scripts_dir = os.path.abspath(os.path.join(os.path.realpath(__file__), '../../../scripts'))
+os.sys.path.insert(0, scripts_dir)
+
+from paths import *
+
+RESULTS  = results_root
+SCRIPT   = os.path.join(os.path.dirname(__file__), "generateMicroTable.r")
+TMP_FILE = os.path.join(tables_dir,"aggregated-micro.csv")
+OUT_FILE = os.path.join(tables_dir,"table_micro.csv")
 
 if os.path.isfile(OUT_FILE):
     os.remove(OUT_FILE)

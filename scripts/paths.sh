@@ -15,6 +15,9 @@ export RESULTS_DIR=$ROOT/results
 # Generated charts directory
 export GRAPHS_DIR=$ROOT/graphs
 
+# Generated tables directory
+export TABLES_DIR=$ROOT/tables
+
 # Data directory
 export DATA_DIR=$ROOT/data
 
@@ -25,7 +28,7 @@ export PATCH_DIR=$ROOT/patches
 export BUILD_SCRIPTS_DIR=$ROOT/scripts/build
 
 # wget command to download programs/data
-WGET="$(which wget) -nc"
+WGET=$(which wget)
 
 # JDKs
 export JDK7_DIR=$INSTALL_DIR/jdk7

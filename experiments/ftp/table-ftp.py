@@ -3,10 +3,15 @@ import re
 import os
 from subprocess import call
 
-RESULTS = "../results"
-SCRIPT = "../scripts/r/generateFTPTable.r"
-TMP_FILE = os.path.join(RESULTS,"aggregated-ftp.csv")
-OUT_FILE = os.path.join(RESULTS,"table_ftp.csv")
+scripts_dir = os.path.abspath(os.path.join(os.path.realpath(__file__), '../../../scripts'))
+os.sys.path.insert(0, scripts_dir)
+
+from paths import *
+
+RESULTS  = results_root
+SCRIPT   = os.path.join(os.path.dirname(__file__), "generateFTPTable.r")
+TMP_FILE = os.path.join(tables_dir,"aggregated-ftp.csv")
+OUT_FILE = os.path.join(tables_dir,"table_ftp.csv")
 
 if os.path.isfile(OUT_FILE):
     os.remove(OUT_FILE)

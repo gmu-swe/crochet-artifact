@@ -18,6 +18,9 @@ results_root = getenv('RESULTS_DIR')
 # Generated charts directory
 graphs_dir = getenv('GRAPHS_DIR')
 
+# Generated tables directory
+tables_dir = getenv('TABLES_DIR')
+
 # jvstm
 jvstmdir = getenv('JVSTM_DIR')
 
