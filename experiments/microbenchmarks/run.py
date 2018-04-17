@@ -41,6 +41,8 @@ def workloads() :
 # Max time any execution can take, in seconds
 timeout = 10*60
 
+pin='' # eg 'taskset -c 5,6,7'
+
 def runs() :
     return {
         'no-check-no-sum-native' : {
@@ -49,7 +51,7 @@ def runs() :
                 benchvmargs='',
                 benchclass='net.jonbell.bench.NoCheckpointBench',
                 ),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'no-check-sum-native' : {
@@ -58,7 +60,7 @@ def runs() :
                 benchvmargs='-Dchecksum',
                 benchclass='net.jonbell.bench.NoCheckpointBench',
                 ),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'no-check-no-sum-crochet' : {
@@ -67,7 +69,7 @@ def runs() :
                 benchvmargs='',
                 benchclass='net.jonbell.bench.NoCheckpointBench',
                 ),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'no-check-sum-crochet' : {
@@ -76,7 +78,7 @@ def runs() :
                 benchvmargs='-Dchecksum',
                 benchclass='net.jonbell.bench.NoCheckpointBench',
                 ),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'check-no-sum-crochet' : {
@@ -85,7 +87,7 @@ def runs() :
                 benchvmargs='',
                 benchclass='net.jonbell.bench.CheckpointCrochetBench',
                 ),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'check-sum-crochet' : {
@@ -94,7 +96,7 @@ def runs() :
                 benchvmargs='-Dchecksum',
                 benchclass='net.jonbell.bench.CheckpointCrochetBench',
                 ),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'check-no-sum-serial' : {
@@ -103,7 +105,7 @@ def runs() :
                 benchvmargs='',
                 benchclass='net.jonbell.bench.CheckpointSerializationBench',
                 ),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'check-sum-serial' : {
@@ -112,7 +114,7 @@ def runs() :
                 benchvmargs='-Dchecksum',
                 benchclass='net.jonbell.bench.CheckpointSerializationBench',
                 ),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'check-sum-cloner' : {
@@ -121,7 +123,7 @@ def runs() :
                 benchvmargs='-Dchecksum',
                 benchclass='net.jonbell.bench.DeepCloneBench',
                 ),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'check-sum-mapcloner' : {
@@ -130,7 +132,7 @@ def runs() :
                 benchvmargs='-Dchecksum',
                 benchclass='net.jonbell.bench.HashMapDeepCloneBench',
                 ),
-            'wrap' : '',
+            'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'check-sum-criu' : {
@@ -139,7 +141,7 @@ def runs() :
                 benchvmargs='-Dchecksum',
                 benchclass='net.jonbell.bench.CheckpointCRIUBench',
                 ),
-            'wrap' : 'sudo -E',
+            'wrap' : 'sudo -E {}'.format(pin),
             'env'  : { },
             },
        }

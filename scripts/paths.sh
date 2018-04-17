@@ -48,7 +48,8 @@ export MICROBENCH_DIR=$INSTALL_DIR/ClassChangeMicroBenchmarks
 # STM stuff
 export STMBENCH7_REPO=https://github.com/gmu-swe/jvstm-benchmarks.git
 export STMBENCH7_BRANCH=checkpoint
-export STMBENCH7_DIR=$INSTALL_DIR/stmbench7
+export STMBENCH7_JDK8_DIR=$INSTALL_DIR/stmbench7-jdk8
+export STMBENCH7_JDK7_DIR=$INSTALL_DIR/stmbench7-jdk7
 
 export JVSTM_REPO=https://github.com/inesc-id-esw/jvstm.git
 export JVSTM_BRANCH=master

@@ -10,6 +10,11 @@ from monotonic import monotonic
 from time import sleep
 
 def doRun(run, run_name, args, out, time, timeout):
+
+    for clean in args['clean']:
+        with open('/dev/null', 'w') as devnull:
+            subprocess.Popen(clean, stdout=devnull, stderr=devnull, shell=True)
+
     if 'bin' in args and args['bin'] is not '':
         bin = os.path.join(run['cmd'], args['bin'])
     else:
@@ -82,10 +87,6 @@ def doRun(run, run_name, args, out, time, timeout):
     if not 'expect' in args:
         with open(time, 'a') as time:
             time.write(str(end-start)+"\n")
-
-    for clean in args['clean']:
-        with open('/dev/null', 'w') as devnull:
-            subprocess.Popen(clean, stdout=devnull, stderr=devnull, shell=True)
 
 def run(times, warmup, runs, commands, timeout, results_dir):
     for (name,comm) in commands.iteritems():

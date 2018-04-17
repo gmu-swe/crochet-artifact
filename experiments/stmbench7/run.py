@@ -43,7 +43,7 @@ def runs() :
     return {
         'native-nolock-jdk8' : {
             'cmd'  : run_stmbench7_native.format(jdk=jdk8dir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk8,
                 vmargs="{} -DnoCheckpoint".format(vmargs),
                 args="-g none"),
             'wrap' : '{}'.format(pin),
@@ -51,7 +51,7 @@ def runs() :
             },
         'native-nolock-jdk7' : {
             'cmd'  : run_stmbench7_native.format(jdk=jdk7dir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk7,
                 vmargs="{} -DnoCheckpoint".format(vmargs),
                 args="-g none"),
             'wrap' : '{}'.format(pin),
@@ -60,7 +60,7 @@ def runs() :
         'crochet-nolock' : {
             'cmd'  : run_stmbench7_crochet.format(
                 crochet=crochetdir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk8,
                 vmargs="{} -DnoCheckpoint".format(vmargs),
                 args="-g none"),
             'wrap' : '{}'.format(pin),
@@ -69,7 +69,7 @@ def runs() :
         'crochet-nolock-checkpoint' : {
             'cmd'  : run_stmbench7_crochet.format(
                 crochet=crochetdir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk8,
                 vmargs="{}".format(vmargs),
                 args="-g none"),
             'wrap' : '{}'.format(pin),
@@ -77,7 +77,7 @@ def runs() :
             },
         'deuce-lsa'     : {
             'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk7,
                 deuce=deucedir,
                 stm="org.deuce.transaction.lsa.Context",
                 vmargs="{} -DnoCheckpoint".format(vmargs),
@@ -87,7 +87,7 @@ def runs() :
             },
         'deuce-lsa-notx'     : {
             'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk7,
                 deuce=deucedir,
                 stm="org.deuce.transaction.lsa.Context",
                 vmargs="{} -DnoCheckpoint -DnoTransactions".format(vmargs),
@@ -97,7 +97,7 @@ def runs() :
             },
         'deuce-lsa-checkpoint' : {
             'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk7,
                 deuce=deucedir,
                 stm="org.deuce.transaction.lsa.Context",
                 vmargs=vmargs,
@@ -107,7 +107,7 @@ def runs() :
             },
         'deuce-tl2'     : {
             'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk7,
                 deuce=deucedir,
                 stm="org.deuce.transaction.tl2.Context",
                 vmargs="{} -DnoCheckpoint".format(vmargs),
@@ -117,7 +117,7 @@ def runs() :
             },
         'deuce-tl2-notx'     : {
             'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk7,
                 deuce=deucedir,
                 stm="org.deuce.transaction.tl2.Context",
                 vmargs="{} -DnoCheckpoint -DnoTransactions".format(vmargs),
@@ -127,7 +127,7 @@ def runs() :
             },
         'deuce-tl2-checkpoint' : {
             'cmd'  : run_stmbench7_deuce.format(jdk=jdk7dir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk7,
                 deuce=deucedir,
                 stm="org.deuce.transaction.tl2.Context",
                 vmargs=vmargs,
@@ -137,7 +137,7 @@ def runs() :
             },
         'jvstm'     : {
             'cmd'  : run_stmbench7_native.format(jdk=jdk7dir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk7,
                 vmargs="{} -DnoCheckpoint".format(vmargs),
                 args="-g stm -s stmbench7.impl.jvstm.JVSTMInitializer"),
             'wrap' : '{}'.format(pin),
@@ -145,7 +145,7 @@ def runs() :
             },
         'jvstm-notx'     : {
             'cmd'  : run_stmbench7_native.format(jdk=jdk7dir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk7,
                 vmargs="{} -DnoCheckpoint -DnoTransactions".format(vmargs),
                 args="-g stm -s stmbench7.impl.jvstm.JVSTMInitializer"),
             'wrap' : '{}'.format(pin),
@@ -153,7 +153,7 @@ def runs() :
             },
         'jvstm-checkpoint' : {
             'cmd'  : run_stmbench7_native.format(jdk=jdk7dir,
-                stmbench7=stmbench7dir,
+                stmbench7=stmbench7dir_jdk7,
                 vmargs=vmargs,
                 args="-g stm -s stmbench7.impl.jvstm.JVSTMInitializer"),
             'wrap' : '{}'.format(pin),

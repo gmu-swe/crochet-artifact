@@ -10,13 +10,14 @@ from run import run
 from paths import *
 
 # How many times should each run be repeated?
-times = 3
+times = 2
 
 # Number of warmup commands before starting to take measurements
 warmup = 0
 
 run_native="{jdk}/bin/java {vmargs} {{benchvmargs}} -cp {dacapojar} Harness {args}"
 run_crochet="{crochet}/target/jre-inst/bin/java {{benchvmargs}} {vmargs} -agentpath:{crochet}/target/libtagging.so -javaagent:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -Xbootclasspath/p:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -cp {dacapojar} Harness {args}"
+run_crochet_cb="{crochet}/target/jre-inst/bin/java {{benchvmargs}} {vmargs} -agentpath:{crochet}/target/libtagging.so -javaagent:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -Xbootclasspath/p:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -cp {dacapojar}:{crochet}/exp-scripts/lib/CRIJ-dacapoCB-0.0.1-SNAPSHOT.jar Harness {args}"
 
 def workloads() :
     return {
@@ -102,7 +103,7 @@ def workloads() :
         'tradesoap' : {
             'bin'   : '',
             'args'  : "tradesoap",
-            'clean' : [ ],
+            'clean' : [ 'rm -rf /experiments/luis-crochet/crochet-artifact/scratch' ],
             'env'   : { }
             } ,
         'xalan' : {
@@ -113,28 +114,38 @@ def workloads() :
             } ,
         }
 
-vmargs="-Xmx2G"
+vmargs="-Xmx10G"
 
 # Max time any execution can take, in seconds
 timeout = 10*60
 
-pin='' # eg 'taskset -c 5,6,7'
+pin='numactl --membind 1 --cpunodebind 1' # eg 'taskset -c 5,6,7'
 
 def runs() :
     return {
         'native' : {
             'cmd'  : run_native.format(jdk=jdk8dir,
                 vmargs=vmargs,
-                args='-C -n 50 --scratch-directory=/tmp/dacapo-scratch',
+                args='--variance 2.0 -C -n 50',
                 dacapojar=dacapojar),
             'wrap' : '{}'.format(pin),
             'env'  : { },
             },
         'crochet' : {
             'cmd'  : run_crochet.format(
+                jdk8=jdk8dir,
                 crochet=crochetdir,
                 vmargs=vmargs,
-                args='-C -n 50 --scratch-directory=/tmp/dacapo-scratch',
+                args='--variance 2.0 -C -n 50',
+                dacapojar=dacapojar),
+            'wrap' : '{}'.format(pin),
+            'env'  : { },
+            },
+        'crochet-callback' : {
+            'cmd'  : run_crochet_cb.format(
+                crochet=crochetdir,
+                vmargs=vmargs,
+                args='--variance 2.0 -C -n 50 -c net.jonbell.crij.CheckpointingCB',
                 dacapojar=dacapojar),
             'wrap' : '{}'.format(pin),
             'env'  : { },
