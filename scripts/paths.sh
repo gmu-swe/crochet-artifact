@@ -62,7 +62,7 @@ export DEUCE_BRANCH=master
 export DEUCE_DIR=$INSTALL_DIR/deuce
 
 # CRIU dir to dump the checkpoints
-export CROCHET_CRIU_DIR=/home/ubuntu/criu-dump
+export CROCHET_CRIU_DIR=$HOME/criu-dump
 
 export DACAPO_JAR=$ROOT/downloads/dacapo-9.12-bach.jar
 
@@ -87,7 +87,7 @@ export DACAPO_H2_BRANCH=master
 export DACAPO_H2_DIR=$INSTALL_DIR/dacapo-h2
 
 # How many times to run each experiment?
-export GLOBAL_TIMES=1
+export GLOBAL_TIMES=2
 
 # Global JVM settings
 export GLOBAL_JVM_PARAMS="-Xmx4G"
