@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Root dir
-export ROOT=/vagrant
+export ROOT=/experiments/luis-crochet/crochet-artifact
 
 # Where everything is downloaded
 export DOWNLOAD_DIR=$ROOT/downloads
@@ -38,12 +38,12 @@ export OPENJDK_DIR=$INSTALL_DIR/openjdk
 export REPOS_DIR=$ROOT/repos
 
 # CROCHET repo
-export CROCHET_REPO=$REPOS_DIR/crochet
+export CROCHET_REPO=git@github.com:gmu-swe/crochet.git
 export CROCHET_BRANCH=master
 export CROCHET_DIR=$INSTALL_DIR/crochet
 
 # Microbenchmark repo
-export MICROBENCH_REPO=$REPOS_DIR/ClassChangeMicroBenchmarks
+export MICROBENCH_REPO=git@github.com:gmu-swe/ClassChangeMicroBenchmarks.git
 export MICROBENCH_BRANCH=master
 export MICROBENCH_DIR=$INSTALL_DIR/ClassChangeMicroBenchmarks
 
@@ -62,12 +62,12 @@ export DEUCE_BRANCH=master
 export DEUCE_DIR=$INSTALL_DIR/deuce
 
 # CRIU dir to dump the checkpoints
-export CROCHET_CRIU_DIR=$HOME/criu-dump
+export CROCHET_CRIU_DIR=/tmp/criu
 
 export DACAPO_JAR=$ROOT/downloads/dacapo-9.12-bach.jar
 
 # CROSSFTP repo
-export CROSSFTP_REPO=$REPOS_DIR/crossftp
+export CROSSFTP_REPO=git@github.com:gmu-swe/crossftp.git
 export CROSSFTP_BRANCH=crochet-1.07
 export CROSSFTP_DIR=$INSTALL_DIR/crossftp
 
@@ -82,7 +82,7 @@ export H2_BRANCH=release-1.2.121
 export H2_DIR=$INSTALL_DIR/h2
 
 # DaCapo H2 repo
-export DACAPO_H2_REPO=$REPOS_DIR/dacapo-h2
+export DACAPO_H2_REPO=git@github.com:gmu-swe/dacapo-h2.git
 export DACAPO_H2_BRANCH=master
 export DACAPO_H2_DIR=$INSTALL_DIR/dacapo-h2
 
@@ -93,4 +93,4 @@ export GLOBAL_TIMES=20
 export GLOBAL_TIMES_QUICK=2
 
 # Global JVM settings
-export GLOBAL_JVM_PARAMS="-Xmx4G"
+export GLOBAL_JVM_PARAMS="-Xmx10G"

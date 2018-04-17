@@ -18,6 +18,7 @@ warmup = 0
 run_native="{jdk}/bin/java {vmargs} {{benchvmargs}} -cp {dacapojar} Harness {args}"
 run_crochet="{crochet}/target/jre-inst/bin/java {{benchvmargs}} {vmargs} -agentpath:{crochet}/target/libtagging.so -javaagent:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -Xbootclasspath/p:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -cp {dacapojar} Harness {args}"
 dacapo_opts='-C -n 50 --scratch-directory=/tmp/dacapo-scratch'
+#dacapo_opts='-n 10 --scratch-directory=/tmp/dacapo-scratch'
 dacapo_h2_jar='{}/benchmarks/dacapo.jar'.format(dacapoh2dir)
 
 def workloads() :
@@ -28,6 +29,12 @@ def workloads() :
             'clean' : [ ],
             'env'   : { }
             } ,
+        'large' : {
+            'bin'   : '',
+            'args'  : '-s large',
+            'clean' : [ ],
+            'env'   : { }
+            } ,
         }
 
 vmargs="{}".format(globalJvmParams)
@@ -35,7 +42,7 @@ vmargs="{}".format(globalJvmParams)
 # Max time any execution can take, in seconds
 timeout = 5*60
 
-pin='' # eg 'taskset -c 5,6,7'
+pin='numactl --membind 1 --cpunodebind 1' # eg 'taskset -c 5,6,7'
 
 def runs() :
     return {

@@ -35,9 +35,9 @@ def workloads() :
 vmargs="{}".format(globalJvmParams)
 
 # Max time any execution can take, in seconds
-timeout = 3*60
+timeout = 10*60
 
-pin='' # eg 'taskset -c 5,6,7'
+pin='numactl --membind 1 --cpunodebind 1' # eg 'taskset -c 5,6,7'
 
 def runs() :
     return {
