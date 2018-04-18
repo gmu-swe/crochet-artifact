@@ -2,9 +2,11 @@
 
 source ../paths.sh
 
-sudo apt-get install -y --force-yes zip unzip libfreetype6-dev libcups2-dev libasound2-dev libx11-dev libxt-dev libxaw7-dev libxtst-dev libxrender-dev
+sudo yum -y install zip unzip freetype-devel cups-devel cups-libs alsa-lib-devel ant libstdc++-static libX11-devel libXt-devel libXext-devel libXrender-devel libXtst-devel
 
-unzip "$ROOT/openjdk.zip" -d $INSTALL_DIR
+sudo timedatectl set-ntp 0
+sudo timedatectl set-time "2008-01-01 00:00:00"
+unzip "$DOWNLOAD_DIR/openjdk.zip" -d $INSTALL_DIR
 pushd $OPENJDK_DIR
 {
     unset JAVA_HOME
@@ -17,8 +19,9 @@ pushd $OPENJDK_DIR
     make all
 }
 popd
+sudo timedatectl set-ntp 1
 
-unzip "$ROOT/xj.zip" -d $INSTALL_DIR
+unzip "$DOWNLOAD_DIR/xj.zip" -d $INSTALL_DIR
 pushd $INSTALL_DIR/ASM-5.0.3
 {
     export JAVA_HOME=$JDK7_DIR
@@ -38,6 +41,9 @@ pushd $INSTALL_DIR/xjrt
     export JAVA_HOME=$JDK7_DIR
     ant
     ant # yeah, twice does it
+
+    sed -i "s#/etc/alternatives/java_sdk_1.7.0#$JDK7_DIR#g" Makefile
+    make
 }
 popd
 
@@ -67,14 +73,18 @@ pushd $INSTALL_DIR/ruggedj
     pushd jvmti_agent
     {
         mkdir obj
-        patch -p1 < $PATCH_DIR/jvmti_agent_Makefile.patch
+        #patch -p1 < $PATCH_DIR/jvmti_agent_Makefile.patch
+        sed -i "s#/etc/alternatives/java_sdk_1.7.0#$JDK7_DIR#g" Makefile
         export JAVA_HOME=$JDK7_DIR
         make
     }
     popd
 
+    mv Benchmarks/synchroBench Benchmarks/synchroBench.bak
+    git clone $SYNCHROBENCH_REPO Benchmarks/synchroBench
     pushd Benchmarks/synchroBench
     {
+        sed -i "s#/home/tguest/crochet-artifact/software/crochet#$CROCHET_DIR#g" build.xml
         patch -p1 < $PATCH_DIR/synchrobench.patch
         PATH=$JDK7_DIR/bin:$PATH ant
         PATH=$JDK7_DIR/bin:$PATH bash preprocess.sh

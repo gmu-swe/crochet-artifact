@@ -13,3 +13,5 @@ pushd crossftp
 popd
 
 git clone git@github.com:gmu-swe/dacapo-h2.git
+
+git clone git@github.com:gmu-swe/synchrobench.git

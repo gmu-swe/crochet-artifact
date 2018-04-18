@@ -7,16 +7,16 @@ export ROOT=/vagrant
 export DOWNLOAD_DIR=$ROOT/downloads
 
 # Where everything is installed
-export INSTALL_DIR=/home/ubuntu/software
+export INSTALL_DIR=$HOME/software
 
 # Results directory
-export RESULTS_DIR=$ROOT/results
+export RESULTS_DIR=$HOME/results
 
 # Generated charts directory
-export GRAPHS_DIR=$ROOT/graphs
+export GRAPHS_DIR=$HOME/graphs
 
 # Generated tables directory
-export TABLES_DIR=$ROOT/tables
+export TABLES_DIR=$HOME/tables
 
 # Data directory
 export DATA_DIR=$ROOT/data
@@ -85,6 +85,9 @@ export H2_DIR=$INSTALL_DIR/h2
 export DACAPO_H2_REPO=$REPOS_DIR/dacapo-h2
 export DACAPO_H2_BRANCH=master
 export DACAPO_H2_DIR=$INSTALL_DIR/dacapo-h2
+
+# Synchrobench repo
+export SYNCHROBENCH_REPO=$REPOS_DIR/synchrobench
 
 # How many times to run each experiment? (min 2)
 export GLOBAL_TIMES=20
