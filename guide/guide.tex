@@ -107,6 +107,11 @@ can find it on directory XXX.  It's structure is as follows:
 
 The second VM only runs Section~XXX on the paper.
 
+The structure of the VM is very similar to the Main VM, described in
+Section~\ref{sec:main}, differing only as presented below.
+
+/vagrant is not as magical as before
+
 \section{Provision the VM}
 
 This section explains how to provision each VM.
@@ -227,6 +232,12 @@ overwrite any data left from the regular experiment.
 \label{sec:paper-run}
 
 Don't forget about \emph{Benchmark failed to converge} for dacapo or dacapo-h2.
+
+\begin{description}
+
+    \item[dacapo] Around 8h
+
+\end{description}
 
 \section{Generate result tables}
 \label{sec:tables}
