@@ -40,23 +40,31 @@ fieller = function(x, y) {
 }
 simpleMean = function(bm, con)
 {
-    if (nrow(subset(data, benchmark == bm & mode == con)) > 0) {
+    if (nrow(subset(data, benchmark == bm & mode == con)) > 10) {
         ret <- t.test(subset(data, benchmark == bm & mode == con)$time)
         return(list(ci0 = ret$conf.int[1], ci1 = ret$conf.int[2], avg = ret$estimate))
     }
     else {
+        if((nrow(subset(data, benchmark == bm & mode == con)) > 0))
+        return(list(ci0 = 0, ci1 = 0, avg = mean(subset(data, benchmark == bm & mode == con)$time)))
+
         return(list(ci0 = 0, ci1 = 0, avg = 0))
     }
 }
 calcMean = function(bm, con){
-    if (nrow(subset(data, benchmark == bm & mode == con)) > 0
-    && nrow(subset(data, benchmark == bm & mode == "native")) > 0) {
+    if (nrow(subset(data, benchmark == bm & mode == con)) > 10
+    && nrow(subset(data, benchmark == bm & mode == "native")) > 10) {
         ret <- t.test.ratio(x = subset(data, benchmark == bm & mode == con)$time, y = subset(data, benchmark == bm & mode == "native")$time, base = 1, na.rm = TRUE)
         return(list(ci0 = as.numeric(ret$conf.int[1]), ci1 = as.numeric(ret$conf.int[2]), avg = as.numeric(ret$estimate[3])))
     }
     else
     {
-        return(list(ci0 = 0, ci1 = 0, avg = 0))
+        if (nrow(subset(data, benchmark == bm & mode == con))> 0
+         && nrow(subset(data, benchmark == bm & mode == "native"))> 0) {
+            return(list(ci0 = 0, ci1 = 0, avg = mean(subset(data, benchmark == bm & mode == con)$time)/mean(subset(data, benchmark == bm & mode == "native")$time)))
+        }
+        else
+            return(list(ci0 = 0, ci1 = 0, avg = 0))
     }
 }
 buildTable = function(mode){
