@@ -3,10 +3,15 @@ import re
 import os
 from subprocess import call
 
-RESULTS = "../results"
-SCRIPT = "../scripts/r/generateSTMTable.r"
-TMP_FILE = os.path.join(RESULTS,"aggregated-stm.csv")
-OUT_FILE = os.path.join(RESULTS,"table_stm.csv")
+scripts_dir = os.path.abspath(os.path.join(os.path.realpath(__file__), '../../../scripts'))
+os.sys.path.insert(0, scripts_dir)
+
+from paths import *
+
+RESULTS = results_root
+SCRIPT   = os.path.join(os.path.dirname(__file__), "generateSTMTable.r")
+TMP_FILE = os.path.join(tables_dir,"aggregated-stm.csv")
+OUT_FILE = os.path.join(tables_dir,"table_stm.csv")
 
 if os.path.isfile(OUT_FILE):
     os.remove(OUT_FILE)

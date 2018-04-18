@@ -10,7 +10,7 @@ from run import run
 from paths import *
 
 # How many times should each run be repeated?
-times = 1
+times = globalTimes
 
 # Number of warmup commands before starting to take measurements
 warmup = 0
@@ -41,7 +41,7 @@ run;\
 quit\
 "'
 
-vmargs = "-Xmx4G"
+vmargs="{}".format(globalJvmParams)
 
 native_server= "{jdk}/bin/java {vmargs} -cp {crossftpdir}/common/lib/commons-logging-1.0.3.jar:{crossftpdir}/common/lib/CRIJ-0.0.1-SNAPSHOT.jar:{crossftpdir}/common/lib/jnlp-1.0.jar:{crossftpdir}/common/lib/jnlp.jar:{crossftpdir}/common/lib/log4j-1.2.12.jar:{crossftpdir}/common/lib/README.txt:{crossftpdir}/dist/crossftp-1.07.jar org.apache.ftpserver.commandline.CommandLine -prop {crossftpdir}/ftpd.properties".format(vmargs=vmargs,jdk=jdk8dir,crossftpdir=crossftpdir)
 

@@ -10,7 +10,7 @@ from run import run
 from paths import *
 
 # How many times should each run be repeated?
-times = 3
+times = globalTimes
 
 # Number of warmup commands before starting to take measurements
 warmup = 0
@@ -30,10 +30,10 @@ def workloads() :
             } ,
         }
 
-vmargs="-Xmx2G"
+vmargs="{}".format(globalJvmParams)
 
 # Max time any execution can take, in seconds
-timeout = 10*60
+timeout = 5*60
 
 pin='' # eg 'taskset -c 5,6,7'
 

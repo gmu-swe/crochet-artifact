@@ -24,8 +24,25 @@ pushd $DEUCE_DIR
 popd
 
 # StmBench7
-git clone $STMBENCH7_REPO $STMBENCH7_DIR
-pushd $STMBENCH7_DIR/stmbench7
+git clone $STMBENCH7_REPO $STMBENCH7_JDK8_DIR
+pushd $STMBENCH7_JDK8_DIR/stmbench7
+{
+    git checkout $STMBENCH7_BRANCH
+    ln -s `find $JVSTM_DIR/target -maxdepth 1 -name "jvstm*jar"` lib/jvstm.jar
+    ln -s `find $DEUCE_DIR/bin -name "deuceAgent.jar"` lib/deuceAgent.jar
+    ln -s `find $CROCHET_DIR/target -name "CRIJ-*SNAPSHOT.jar"` lib/crij.jar
+
+    #JDK 8
+    {
+        export JAVA_HOME=$JDK8_DIR
+        ant jar
+    }
+
+}
+popd
+
+git clone $STMBENCH7_REPO $STMBENCH7_JDK7_DIR
+pushd $STMBENCH7_JDK7_DIR/stmbench7
 {
     git checkout $STMBENCH7_BRANCH
     ln -s `find $JVSTM_DIR/target -maxdepth 1 -name "jvstm*jar"` lib/jvstm.jar
@@ -42,14 +59,7 @@ pushd $STMBENCH7_DIR/stmbench7
         $JDK7_DIR/bin/java -Dorg.deuce.include=java.util.* -XX:-UseSplitVerifier -jar lib/deuceAgent.jar `find $JDK7_DIR -name rt.jar` dist/rt-instrumented.jar
 
         # Process the stmbench7 jar with Deuce
-    $JDK7_DIR/bin/java -Dorg.deuce.include=java.util.* -XX:-UseSplitVerifier -jar lib/deuceAgent.jar dist/stmbench7-1.2.jar dist/stmbench7-1.2-instrumented.jar
-    }
-
-    #JDK 8
-    {
-        export JAVA_HOME=$JDK8_DIR
-        rm -rf dist/stmbench7-1.2.jar classes
-        ant jar
+        $JDK7_DIR/bin/java -Dorg.deuce.include=java.util.* -XX:-UseSplitVerifier -jar lib/deuceAgent.jar dist/stmbench7-1.2.jar dist/stmbench7-1.2-instrumented.jar
     }
 
 }

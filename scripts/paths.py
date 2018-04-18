@@ -18,11 +18,15 @@ results_root = getenv('RESULTS_DIR')
 # Generated charts directory
 graphs_dir = getenv('GRAPHS_DIR')
 
+# Generated tables directory
+tables_dir = getenv('TABLES_DIR')
+
 # jvstm
 jvstmdir = getenv('JVSTM_DIR')
 
 # stmbench7
-stmbench7dir = getenv('STMBENCH7_DIR')
+stmbench7dir_jdk7 = getenv('STMBENCH7_JDK7_DIR')
+stmbench7dir_jdk8 = getenv('STMBENCH7_JDK8_DIR')
 
 # microbenchmarks
 microbenchdir = getenv('MICROBENCH_DIR')
@@ -46,3 +50,12 @@ metasploitdir = getenv('METASPLOIT_DIR')
 
 # crossftp
 crossftpdir = getenv('CROSSFTP_DIR')
+
+# dacapo-h2
+dacapoh2dir = getenv('DACAPO_H2_DIR')
+
+# global JVM args
+globalJvmParams = getenv('GLOBAL_JVM_PARAMS')
+
+# global JVM args
+globalTimes = int(getenv('GLOBAL_TIMES'))

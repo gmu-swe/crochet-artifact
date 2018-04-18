@@ -1,0 +1,115 @@
+\title{CROCHET Artifact Guide}
+\author{Jonhattan Bell \and Lu\'{i}s Pina}
+\date{\today}
+
+\documentclass[12pt]{article}
+
+\usepackage{url}
+\usepackage{hyperref}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This is the paper's abstract \ldots
+\end{abstract}
+
+\section{Introduction}
+
+\subsection{Structure of this artifact}
+
+This artifact consists of two VMs which are set-up and provisioned using
+Vagrant.\footnote{\url{https://www.vagrantup.com/}}  You should install Vagrant
+and Virtualbox in your system, we tested this artifact with Vagrant version XXX
+and Virtualbox version XXX on GNU/Linux and Vagrant version YYY and Virtualbox
+version YYY on MacOS.
+
+\subsubsection{Main VM}
+
+The first VM is the main VM that runs all the experiments except Section~XXX on
+the paper.  It uses Ubuntu 16.04 LTS as the underlying operating system, and you
+can find it on directory XXX.  It's structure is as follows:
+
+\begin{description}
+
+    \item[Vagrantfile] File that describes how Vagrant should provision the VM.
+        Parameter \texttt{config.vm.provision}, at the end of the file,
+        describes how to provision the artifact VM by running shell scripts
+        listed below on this document.  Please customize the following
+        parameters:
+
+        \begin{description}
+
+            \item[vm.memory] Memory that the VM will have.  We recommend at least 8G (8192MB).
+
+            \item[vm.cpus] Number of CPUs available to the VM.  We recomment at least 2, more is better.
+
+        \end{description}
+
+    \item[downloads] The artifact requires some files to be downloaded from the
+        internet and saved here.  We already populated this directory for your
+        convenience.  File \texttt{scripts/downloads.sh} should be able to
+        re-download them if needed.
+
+        \begin{itemize}
+
+            \item Oracle HotSpot JDK7
+
+            \item Oracle HotSpot JDK8
+
+            \item DaCapo 9.12 jar file
+
+        \end{itemize}
+
+    \item[scripts]  Several scripts and utilities used throughout the VM.  File
+        \texttt{scripts/path.sh} is of particular interest as it sets the
+        environment used throughout the artifact.  Ensure that variable
+        \texttt{GLOBAL\_JVM\_PARAMS} configures JVMs with a maximum heap size
+        that fits in the memory you configured the artifact VM with, in file
+        \texttt{Vagrantfile} with parameter \texttt{vb.memory}.  We recommend at
+        least 4GB with: \texttt{GLOBAL\_JVM\_PARAMS="-Xmx4G"}
+
+    \item[experiments]  Each experiment reported in the paper has a
+        subdirectory with the scripts to run it and generate a table with its
+        results:
+
+        \begin{description}
+
+            \item[microbenchmarks] Section XXX
+
+            \item[dacapo] Section XXX
+
+            \item[dacapo-h2] Section XXX
+
+            \item[ftp] Section XXX
+
+            \item[stmbench7] Section XXX
+
+        \end{description}
+
+    \item[results]  The artifact saves the raw results of each experiment in
+        this directory, under a subdirectory structure similar to the
+        experiments structure.
+
+    \item[tables]  The artifact saves in this directory the tables generated
+        from the raw results.
+
+\end{description}
+
+\subsubsection{XJ VM}
+
+The second VM only runs Section~XXX on the paper.
+
+\section{Provision the VM}
+
+\section{Run the experiments}
+
+\subsection{Quick run}
+
+\subsection{Paper run}
+
+\section{Generate result tables}
+
+\section{Run the artifact outside of the VM}
+
+\end{document}
