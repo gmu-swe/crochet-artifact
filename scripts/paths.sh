@@ -86,8 +86,11 @@ export DACAPO_H2_REPO=$REPOS_DIR/dacapo-h2
 export DACAPO_H2_BRANCH=master
 export DACAPO_H2_DIR=$INSTALL_DIR/dacapo-h2
 
-# How many times to run each experiment?
-export GLOBAL_TIMES=2
+# How many times to run each experiment? (min 2)
+export GLOBAL_TIMES=20
+
+# How many times to run each quick experiment? (min 2)
+export GLOBAL_TIMES_QUICK=2
 
 # Global JVM settings
 export GLOBAL_JVM_PARAMS="-Xmx4G"
