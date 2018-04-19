@@ -5,7 +5,7 @@ source ../paths.sh
 sudo yum -y install zip unzip freetype-devel cups-devel cups-libs alsa-lib-devel ant libstdc++-static libX11-devel libXt-devel libXext-devel libXrender-devel libXtst-devel
 
 sudo timedatectl set-ntp 0
-sudo timedatectl set-time "2008-01-01 00:00:00"
+sudo timedatectl set-time "2017-07-01 00:00:00"
 unzip "$DOWNLOAD_DIR/openjdk.zip" -d $INSTALL_DIR
 pushd $OPENJDK_DIR
 {
