@@ -98,19 +98,67 @@ can find it on directory XXX.  It's structure is as follows:
         this directory, under a subdirectory structure similar to the
         experiments structure.
 
-    \item[tables]  The artifact saves in this directory the tables generated
-        from the raw results.
+        Note that Vagrant synchronizes the contents of this folder on the host
+        machine with the contents of folder \texttt{/vagrant} on the VM.
+        This means that writes from the host are visible inside the VM, and
+        vice-versa.  Putting the results here ensures that you can access them
+        from the host without needint to start the VM.
+
+    \item[tables]  Similarly to the results, the artifact saves in this
+        directory the tables generated from the raw results.
 
 \end{description}
 
 \subsubsection{XJ VM}
 
-The second VM only runs Section~XXX on the paper.
+The second VM only runs the experiments for Table~4 in Section~5.2 of the paper.
 
 The structure of the VM is very similar to the Main VM, described in
-Section~\ref{sec:main}, differing only as presented below.
+Section~\ref{sec:main}.
 
-/vagrant is not as magical as before
+\begin{description}
+
+    \item[Vagrantfile] Similar file to the Main VM, please configure it as you
+        did above.
+
+    \item[downloads] The XJ VM requires the sources of the XJ JVM and the
+        experiments it uses.  These files were kindly made available by the
+        authors of XJ, and are saved here.
+
+        \begin{itemize}
+
+            \item openjdk.zip
+
+            \item xj.zip
+
+        \end{itemize}
+
+    \item[scripts]  Same as above, please configure it in a similar way.
+
+    \item[experiments]  Only one experiment in this VM:
+
+        \begin{description}
+
+            \item[xj] Section~5.3, Table~4
+
+        \end{description}
+
+    \item[results]  Note that the XJ VM does not synchronize this folder with
+        folder \texttt{/vagrant} inside the VM, as before.  Instead, on startup,
+        it overwrites folder \texttt{/vagrant} in the VM with the contents of
+        this file.
+
+        For the results not to be lost between VM cycling, the results can now
+        be found in folder \texttt{\$HOME/results} inside the VM.
+        Unfortunately, you have to copy them manually to the host machine (e.g.,
+        by using \texttt{scp}).
+
+
+    \item[tables]  Moved to folder \texttt{\$HOME/tables} for the same reason as
+        the results.
+
+\end{description}
+
 
 \section{Provision the VM}
 
