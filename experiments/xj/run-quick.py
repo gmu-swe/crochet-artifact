@@ -10,7 +10,7 @@ from run import run
 from paths import *
 
 # How many times should each run be repeated?
-times = globalTimes
+times = globalTimesQuick
 
 # Number of warmup commands before starting to take measurements
 warmup = 0
@@ -116,9 +116,9 @@ def workloads() :
         'default' : {
             'bin'   : '',
             'args'  : " -t 01"     # Number of threads
-                    + " -n 5"      # Number of executions to repeat
-                    + " -d 5000"   # Length (ms) of each execution
-                    + " -W 1"      # Warmup (sec)
+                    + " -n 1"      # Number of executions to repeat
+                    + " -d 100"    # Length (ms) of each execution
+                    + " -W 0"      # Warmup (sec)
                     + " -s 0"      # Snapshot operations (%, leave at 0)
                     + " -a 0"      # Write-all operations (%, leave at 0)
                     + " -i 65536"  # Size of the datastructure
