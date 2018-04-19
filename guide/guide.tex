@@ -292,4 +292,47 @@ Don't forget about \emph{Benchmark failed to converge} for dacapo or dacapo-h2.
 
 \section{Run the artifact outside of the VM}
 
+The XJ VM is not possible to run outside of its VM because the version of
+OpenJDK does not build successfully on modern systems.  We were able to build a
+version of XJ by working around the compiler errors, only to have it allocate
+all the memory available when code JIT compiling is on.
+
+We followed the following approach to execute the experiments provided by the
+Main VM directly on our test machine:
+
+\begin{enumerate}
+
+    \item In file \texttt{scripts/paths.sh}, configure all the build and install
+        directories to reflect where you are building the artifact on your
+        machine.
+
+    \item Source file \texttt{scripts/paths.sh} so set up the environment.  Note
+        that you will need to source this file after each time you modify it.
+
+    \item The provisioning entry-point can be found at the end of file
+        \texttt{Vagrantfile}.  Follow those steps until you reach the invocation
+        of script \texttt{build-all.sh}. The provisioning uses \texttt{apt-get}
+        as the package manager, you need to change this to the package manager
+        your distribution uses to install the same packages.
+
+    \item Follow each build script in folder \texttt{scripts/build} by the same
+        order in which script \texttt{scripts/build-all.sh} calls them.  Modify
+        the package manager commands and ensure all other commands work.  We
+        advice going one file at the time, instead of blindly executing
+        \texttt{scripts/build-all.sh} to build everything in one go.
+
+    \item Adapt and execute all the commands in file
+        \texttt{scripts/pre-run.sh}.
+
+\end{enumerate}
+
+By now, you should have the artifact deployed directly on your machine.  In each
+experiment script \texttt{run.py}, there is a variable \texttt{wrap} that
+defines a command to wrap the execution of each experiment.  This is a good
+place to place commands to pin process to particular CPUs (e.g.,
+\texttt{taskset} or \texttt{numactl}).
+
+Pinning the experiments on cores on the same CPU ensures good quality results,
+with low noise.  We strongly recommend doing so, especially for NUMA machines.
+
 \end{document}
