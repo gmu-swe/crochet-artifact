@@ -15,6 +15,7 @@
 %\renewcommand{\ttdefault}{pcr}
 
 \newcommand{\command}[1]{\colorbox{black}{\texttt{\color{white}#1}}}
+\newcommand{\XXX}{\colorbox{red}{\bf\color{white}XXX}}
 
 \begin{document}
 \maketitle
@@ -24,28 +25,37 @@ This is the paper's abstract \ldots
 \end{abstract}
 
 \section{Introduction}
+\label{sec:first}
 
 This is the guide for the artifact for the paper TITLE.  This artifact consists
 of two VMs which are set-up and provisioned using
 Vagrant.\footnote{\url{https://www.vagrantup.com/}}  You should install Vagrant
-and Virtualbox in your system.  We tested this artifact with Vagrant version XXX
-and Virtualbox version XXX on GNU/Linux and Vagrant version YYY and Virtualbox
-version YYY on MacOS.
+and Virtualbox\footnote{\url{https://www.virtualbox.org/wiki/VirtualBox}} in
+your system.  We tested this artifact with Vagrant version 2.0.1 and Virtualbox
+version 5.2.4 on GNU/Linux version 4.14.13-1-ARCH (Arch Linux).
 
-The sections on this paper are \emph{named} A through XXX to avoid any confusion with
-the sections on the paper, which are \emph{numbered} 1 through XXX.
+The sections on this paper are \emph{named} \ref{sec:first} through
+\ref{sec:last} to avoid any confusion with the sections on the paper, which are
+\emph{numbered} 1 through 8.
 
 Section~\ref{sec:structure} describes the structure of the artifact,
 Section~\ref{sec:provision} describes how to provision each VM,
 Section~\ref{sec:run} describes how to run each experiment,
 Section~\ref{sec:tables} describes how to generate the tables on the paper from
 the results, Section~\ref{sec:algorithm} describes how to match the algorithm in
-Listings TODO with Crochet's code, and Section~\ref{sec:extract} explains how to
+Listings \XXX with Crochet's code, and Section~\ref{sec:extract} explains how to
 extract the artifact from its VM to run the experiments directly.
 
 To \emph{``kick-the-tires''}, we recommend following:
 Section~\ref{sec:structure}, Section~\ref{sec:provision},
 Section~\ref{sec:quickrun}, and Section~\ref{sec:tables}.
+
+The timings are reported for two machines.  The \emph{user machine} is equipped
+with one Intel(R) Core(TM) i7-7700HQ CPU (4 physical cores, 8 logical) and 32GB
+RAM, running GNU/Linux version 4.14.13-1-ARCH (Arch Linux).  The \emph{test
+machine} is equipped with two Intel(R) Xeon(R) CPU E5-2650L v3 CPUs (12 physical
+cores per CPU, 24 logical per CPU, 48 total) and 128GB RAM, running GNU/Linux
+version 4.4.0-116-generic (Ubuntu 16.04.4 LTS).
 
 \section{Structure of this artifact}
 \label{sec:structure}
@@ -53,9 +63,9 @@ Section~\ref{sec:quickrun}, and Section~\ref{sec:tables}.
 \subsection{Main VM}
 \label{sec:main}
 
-The first VM is the Main VM that runs all the experiments except Section~XXX on
-the paper.  It uses Ubuntu 16.04 LTS as the underlying operating system, and you
-can find it on directory XXX.  It's structure is as follows:
+The first VM is the Main VM that runs all the experiments except Table~4 on
+Section~5.3 on the paper.  It uses Ubuntu 16.04 LTS as the underlying operating
+system, and you can find it on directory \XXX.  It's structure is as follows:
 
 \begin{description}
 
@@ -221,15 +231,15 @@ guide)
 
 Once you have configure file \texttt{Vagrantfile} and have all required
 downloaded files, as described in Section~\ref{sec:main}, simply run the command
-\command{vagrant up} from the directory XXX.  Provisioning the Main VM took around 10
-minutes on a machine equipped with XXX.
+\command{vagrant up} from the directory \XXX.  Provisioning the Main VM took around 10
+minutes on the user machine.
 
 \subsection{XJ VM}
 
 Similar to the Main VM, once you have configure file \texttt{Vagrantfile} and
 have all required downloaded files, as described in Section~\ref{sec:xj}, simply
-run the command \command{vagrant up} from the directory XXX.  Provisioning the
-Main VM took around 30 minutes on a machine equipped with XXX.
+run the command \command{vagrant up} from the directory \XXX.  Provisioning the
+Main VM took around 30 minutes on the user machine.
 
 \section{Run the experiments}
 \label{sec:run}
@@ -282,7 +292,7 @@ overwrite any data left from the regular experiment.
     \item[microbenchmarks] Run command
         \command{/vagrant/experiments/micro/run-quick.py}.  This runs an
         experiment for each cell of Table 1 twice.  Running this set of
-        experiments took around 30 minutes on a machine XXX.
+        experiments took around 30 minutes on the user machine.
 
         Once the experiment finishes, you can check that there are no errors
         ensuring that command \command{grep -Ri exception /vagrant/results/microbenchmark}
@@ -297,18 +307,18 @@ overwrite any data left from the regular experiment.
 
     \item[dacapo] Run command \command{/vagrant/experiments/dacapo/run-quick.py}.
         This runs an experiment for each cell of Table 2 twice.  Running this
-        set of experiments took around 5 minutes on a machine XXX.
+        set of experiments took around 5 minutes on the user machine.
 
         Once the experiment finishes, you can check that there are no errors
         ensuring that command \command{grep -R FAIL /vagrant/results/dacapo} does not
         print anything.  Note that benchmark \texttt{tradesoap} may fail
         non-deterministically even for the native case, and is not included on
-        the main results on Table XXX; please ignore errors from this benchmark.
+        the main results on Table \XXX; please ignore errors from this benchmark.
 
     \item[stmbench7] Run command
         \command{/vagrant/experiments/stmbench7/run-quick.py}.  This runs an
         experiment for each cell of Table 3 twice.  Running this set of
-        experiments took around 2 minutes on a machine XXX.
+        experiments took around 2 minutes on the user machine.
 
         Once the experiment finishes, you can check that there are no errors
         ensuring that command \command{grep -Ri exception /vagrant/results/stmbench7}
@@ -317,7 +327,7 @@ overwrite any data left from the regular experiment.
     \item[ftp] Run command
         \command{/vagrant/experiments/ftp/run-quick.py}.  This runs an
         experiment for each cell of Table 5 twice.  Running this set of
-        experiments took around 2 minutes on a machine XXX.
+        experiments took around 2 minutes on the user machine.
 
         Once the experiment finishes, you can check that there are no errors
         ensuring that command \command{grep -Ri exception /vagrant/results/ftp}
@@ -326,7 +336,7 @@ overwrite any data left from the regular experiment.
     \item[dacapo-h2] Run command
         \command{/vagrant/experiments/dacapo-h2/run-quick.py}.  This runs the
         experiment describe in Section~6.2 twice.  Running this set of
-        experiments took around 3 minutes on a machine XXX.
+        experiments took around 3 minutes on the user machine.
 
         Once the experiment finishes, you can check that there are no errors
         ensuring that command \command{grep -R FAIL /vagrant/results/dacapo-h2}
@@ -340,7 +350,7 @@ overwrite any data left from the regular experiment.
 
     \item[xj] Run command \command{/vagrant/experiments/xj/run-quick.py}.  This
         runs an experiment for each cell of Table 4 twice.  Running this set of
-        experiments took around 3 minutes on a machine XXX.
+        experiments took around 3 minutes on the user machine.
 
         Once the experiment finishes, you can check that there are no errors
         ensuring that commands \command{grep -Ri exception \$HOME/results/xj} and
@@ -355,8 +365,8 @@ Running the full set of results used for the paper is similar to running the
 quick results, described above.  The difference is that you will use scripts
 \texttt{run.py} instead of \texttt{run-quick.py} for each experiment.
 
-In the following, we provide the estimated time to run each experiment on a
-machine YYY with the Main VM extracted, as described in
+In the following, we provide the time to run each experiment on the
+test machine with the Main VM extracted, as described in
 Section~\ref{sec:extract}.  We ran the \emph{xj} experiment inside the XJ VM.
 
 \begin{description}
@@ -370,11 +380,11 @@ Section~\ref{sec:extract}.  We ran the \emph{xj} experiment inside the XJ VM.
         specific cores, as described in Section~\ref{sec:extract}, should fix
         this problem.
 
-    \item[stmbench7] TODO
+    \item[stmbench7] \XXX
 
-    \item[ftp] TODO
+    \item[ftp] \XXX
 
-    \item[xj] TODO
+    \item[xj] \XXX
 
 \end{description}
 
@@ -396,19 +406,20 @@ We generated the tables on the paper manually from the CSV files, importing them
 first to spreadsheet software to help us in this task.  We recommend you do the
 same to visualize the results more easily.
 
-TODO map CSV cols to paper table cols
+\XXX map CSV cols to paper table cols
 
 \section{Algorithm location}
 \label{sec:algorithm}
 
-The code that implements the pseudo-code in Section~TODO can be found in folder
+The code that implements the pseudo-code in Section~\XXX can be found in folder
 \texttt{\$HOME/software/crochet/TODO}.  As explained in the paper, each class
 has two states:  \texttt{SLOW} or \texttt{FAST}.  The code for checkpoint,
-rollback, and read/write for each state can be found in methods TODO,
+rollback, and read/write for each state can be found in methods \XXX,
 respectively.
 
 \section{Run the artifact outside of the VM}
 \label{sec:extract}
+\label{sec:last}
 
 The XJ VM is not possible to run outside of its VM because the version of
 OpenJDK does not build successfully on modern systems.  We were able to build a
