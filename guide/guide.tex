@@ -8,6 +8,13 @@
 
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage{color}
+\usepackage{soul}
+
+% Monotype font with bold for listings
+%\renewcommand{\ttdefault}{pcr}
+
+\newcommand{\command}[1]{\colorbox{black}{\texttt{\color{white}#1}}}
 
 \begin{document}
 \maketitle
@@ -18,19 +25,32 @@ This is the paper's abstract \ldots
 
 \section{Introduction}
 
+This is the guide for the artifact for the paper TITLE.  This artifact consists
+of two VMs which are set-up and provisioned using
+Vagrant.\footnote{\url{https://www.vagrantup.com/}}  You should install Vagrant
+and Virtualbox in your system.  We tested this artifact with Vagrant version XXX
+and Virtualbox version XXX on GNU/Linux and Vagrant version YYY and Virtualbox
+version YYY on MacOS.
+
 The sections on this paper are \emph{named} A through XXX to avoid any confusion with
 the sections on the paper, which are \emph{numbered} 1 through XXX.
 
-\subsection{Structure of this artifact}
+Section~\ref{sec:structure} describes the structure of the artifact,
+Section~\ref{sec:provision} describes how to provision each VM,
+Section~\ref{sec:run} describes how to run each experiment,
+Section~\ref{sec:tables} describes how to generate the tables on the paper from
+the results, Section~\ref{sec:algorithm} describes how to match the algorithm in
+Listings TODO with Crochet's code, and Section~\ref{sec:extract} explains how to
+extract the artifact from its VM to run the experiments directly.
 
-This artifact consists of two VMs which are set-up and provisioned using
-Vagrant.\footnote{\url{https://www.vagrantup.com/}}  You should install Vagrant
-and Virtualbox in your system.
+To \emph{``kick-the-tires''}, we recommend following:
+Section~\ref{sec:structure}, Section~\ref{sec:provision},
+Section~\ref{sec:quickrun}, and Section~\ref{sec:tables}.
 
-We tested this artifact with Vagrant version XXX and Virtualbox version XXX on
-GNU/Linux and Vagrant version YYY and Virtualbox version YYY on MacOS.
+\section{Structure of this artifact}
+\label{sec:structure}
 
-\subsubsection{Main VM}
+\subsection{Main VM}
 \label{sec:main}
 
 The first VM is the Main VM that runs all the experiments except Section~XXX on
@@ -98,18 +118,13 @@ can find it on directory XXX.  It's structure is as follows:
         this directory, under a subdirectory structure similar to the
         experiments structure.
 
-        Note that Vagrant synchronizes the contents of this folder on the host
-        machine with the contents of folder \texttt{/vagrant} on the VM.
-        This means that writes from the host are visible inside the VM, and
-        vice-versa.  Putting the results here ensures that you can access them
-        from the host without needint to start the VM.
-
     \item[tables]  Similarly to the results, the artifact saves in this
         directory the tables generated from the raw results.
 
 \end{description}
 
-\subsubsection{XJ VM}
+\subsection{XJ VM}
+\label{sec:xj}
 
 The second VM only runs the experiments for Table~4 in Section~5.2 of the paper.
 
@@ -133,7 +148,22 @@ Section~\ref{sec:main}.
 
         \end{itemize}
 
+        As for the Main VM, it also requires the JVMs used in testing:
+
+        \begin{itemize}
+
+            \item Oracle HotSpot JDK7
+
+            \item Oracle HotSpot JDK8
+
+        \end{itemize}
+
+        Also, as for the Main VM, we already populated this folder with all the
+        required files.
+
     \item[scripts]  Same as above, please configure it in a similar way.
+
+    \item[patches]  Some patches required to build the required software on this VM.
 
     \item[experiments]  Only one experiment in this VM:
 
@@ -143,29 +173,47 @@ Section~\ref{sec:main}.
 
         \end{description}
 
-    \item[results]  Note that the XJ VM does not synchronize this folder with
-        folder \texttt{/vagrant} inside the VM, as before.  Instead, on startup,
-        it overwrites folder \texttt{/vagrant} in the VM with the contents of
-        this file.
-
-        For the results not to be lost between VM cycling, the results can now
-        be found in folder \texttt{\$HOME/results} inside the VM.
-        Unfortunately, you have to copy them manually to the host machine (e.g.,
-        by using \texttt{scp}).
+    \item[results]  Not used, moved to \texttt{\$HOME/results}.  See
+        Section~\ref{sec:sync} for the reasons behind this decision.
 
 
-    \item[tables]  Moved to folder \texttt{\$HOME/tables} for the same reason as
-        the results.
+    \item[tables]  Not used, moved to folder \texttt{\$HOME/tables}.  See
+        Section~\ref{sec:sync} for the reasons behind this decision.
 
 \end{description}
 
+\subsection{Folder synchronization between host and VM}
+\label{sec:sync}
+
+Vagrant mounts the directory that contains file \texttt{Vagrantfile} under
+\texttt{/vagrant} inside the VM.
+
+On the Main VM, these two directories are synchronized in both directions:
+Writes from the host are visible inside the VM, and vice-versa.  Saving the
+results and tables in \texttt{/vagrant/results} and \texttt{/vagrant/tables}
+ensures that you can access them from the host on folders \texttt{results} and
+\texttt{tables} without needing to start the VM.
+
+Because of this synchronization, running some experiments from inside
+\texttt{/vagrant} will incur I/O overhead that skews results.  We recommend
+running all experiments from \texttt{\$HOME}.
+
+On the XJ VM, the two folders are synchronized only in one direction:  On VM
+startup, Vagrant overwrites the contents of \texttt{/vagrant} with the contents
+of the directory that contains file \texttt{Vagrantfile}.
+
+For the results and tables not to be lost between VM cycling, they can be found
+in folder \texttt{\$HOME/results} and \texttt{\$HOME/tables} inside the XJ VM.
+Unfortunately, you have to copy them manually to the host machine (e.g., by
+using \texttt{scp}).
 
 \section{Provision the VM}
+\label{sec:provision}
 
 This section explains how to provision each VM.
 
 Jon, create directory \texttt{repos} and run command
-\texttt{../scripts/populateRepos.sh} from it to clone all the private repos
+\command{../scripts/populateRepos.sh} from it to clone all the private repos
 needed for the artifact. (delete this before sending the final version of this
 guide)
 
@@ -173,37 +221,49 @@ guide)
 
 Once you have configure file \texttt{Vagrantfile} and have all required
 downloaded files, as described in Section~\ref{sec:main}, simply run the command
-\texttt{vagrant up} from the directory XXX.  Provisioning the Main VM took around 10
+\command{vagrant up} from the directory XXX.  Provisioning the Main VM took around 10
 minutes on a machine equipped with XXX.
 
 \subsection{XJ VM}
 
-Provisioning the Main VM took around 24 minutes on a machine equipped with XXX.
+Similar to the Main VM, once you have configure file \texttt{Vagrantfile} and
+have all required downloaded files, as described in Section~\ref{sec:xj}, simply
+run the command \command{vagrant up} from the directory XXX.  Provisioning the
+Main VM took around 30 minutes on a machine equipped with XXX.
 
 \section{Run the experiments}
+\label{sec:run}
 
-To log-on a provisioned VM, use command \texttt{vagrant ssh}.  If a provisioned
+To log-on a provisioned VM, use command \command{vagrant ssh}.  If a provisioned
 machine is not running (either is stopped or suspended), you can start it with
-command \texttt{vagrant up}.  To stop a running VM, log-on and type \texttt{sudo
-poweroff}.  To suspend a running vm, use command \texttt{vagrant suspend}.
+command \command{vagrant up}.  To stop a running VM, log-on and type \command{sudo
+poweroff}.  To suspend a running vm, use command \command{vagrant suspend}.
 
-To run each experiment, you should log-on to the machine and type command
+To run any experiment, you should log-on to the VM and type command
 \texttt{source /vagrant/scripts/paths.sh} to set up the environment correctly.
 
-Please note that folder \texttt{/vagrant} is the same folder where you typed
-\texttt{vagrant up} on the host machine, and any changes between these folders
-are synchronized.  Some experiments (e.g., DaCapo) write scratch results on the
-directory in which they are launched from.  Therefore, to avoid directory
-synchronization overhead, we recommend running the experiments from folder
-\texttt{/home/ubuntu} on the Main VM, and folder XXX on the XJ VM.
+Please note, for the Main VM, that folder \command{/vagrant} is the same folder
+where you typed \command{vagrant up} on the host machine, and any changes between
+these folders are synchronized.  As a result, results and tables generated
+inside the VM are automatically available to the host machine.
+
+Some experiments (e.g., DaCapo) write scratch results on the directory in which
+they are launched from.  Therefore, to avoid directory synchronization overhead,
+we recommend running the experiments from folder \texttt{\$HOME} on the
+Main VM.
+
+For the XJ VM, these two folders are only synchronized from the host to the VM
+by copying the contents of the folder on the host at VM startup time.
+Extracting the results requires other means (e.g., \command{scp}).
 
 To stop a running experiment, interrupting the experiment script with
 \texttt{CTRL+C} is not enough, as the current iteration will continue to execute
-in the background.  You can stop it with command \texttt{killall -KILL java}.
+in the background.  You can stop it with command \command{killall -KILL java}.
 
 All experiments run on the Main VM, except for experiments reported in Table~4.
 
 \subsection{Quick run}
+\label{sec:quickrun}
 
 Quick runs are smaller versions of the regular experiment, ideal for the
 \emph{kick-the-tires} phase of testing.  If these experiments complete
@@ -220,79 +280,135 @@ overwrite any data left from the regular experiment.
 \begin{description}
 
     \item[microbenchmarks] Run command
-        \texttt{/vagrant/experiments/micro/run-quick.py}.  This runs an
+        \command{/vagrant/experiments/micro/run-quick.py}.  This runs an
         experiment for each cell of Table 1 twice.  Running this set of
         experiments took around 30 minutes on a machine XXX.
 
         Once the experiment finishes, you can check that there are no errors
-        ensuring that command \texttt{grep -Ri exception /vagrant/results/microbenchmark}
+        ensuring that command \command{grep -Ri exception /vagrant/results/microbenchmark}
         does not print anything.
 
         Note that this quick run does not generate the full results, so the
         table generating scripts described in Section~\ref{sec:tables} will not
         work.  If you want to try those, set variable \texttt{GLOBAL\_TIMES} to
-        2 in file \texttt{/vagrant/scripts/paths.sh}, reset the environment with
-        command \texttt{source /vagrant/scripts/paths.sh} and do a paper run,
+        2 in file \command{/vagrant/scripts/paths.sh}, reset the environment with
+        command \command{source /vagrant/scripts/paths.sh} and do a paper run,
         described in Section~\ref{sec:paper-run}.
 
-    \item[dacapo] Run command \texttt{/vagrant/experiments/dacapo/run-quick.py}.
+    \item[dacapo] Run command \command{/vagrant/experiments/dacapo/run-quick.py}.
         This runs an experiment for each cell of Table 2 twice.  Running this
         set of experiments took around 5 minutes on a machine XXX.
 
         Once the experiment finishes, you can check that there are no errors
-        ensuring that command \texttt{grep -R FAIL /vagrant/results/dacapo} does not
+        ensuring that command \command{grep -R FAIL /vagrant/results/dacapo} does not
         print anything.  Note that benchmark \texttt{tradesoap} may fail
         non-deterministically even for the native case, and is not included on
         the main results on Table XXX; please ignore errors from this benchmark.
 
     \item[stmbench7] Run command
-        \texttt{/vagrant/experiments/stmbench7/run-quick.py}.  This runs an
+        \command{/vagrant/experiments/stmbench7/run-quick.py}.  This runs an
         experiment for each cell of Table 3 twice.  Running this set of
         experiments took around 2 minutes on a machine XXX.
 
         Once the experiment finishes, you can check that there are no errors
-        ensuring that command \texttt{grep -Ri exception /vagrant/results/stmbench7}
+        ensuring that command \command{grep -Ri exception /vagrant/results/stmbench7}
         does not print anything.
 
     \item[ftp] Run command
-        \texttt{/vagrant/experiments/ftp/run-quick.py}.  This runs an
+        \command{/vagrant/experiments/ftp/run-quick.py}.  This runs an
         experiment for each cell of Table 5 twice.  Running this set of
         experiments took around 2 minutes on a machine XXX.
 
         Once the experiment finishes, you can check that there are no errors
-        ensuring that command \texttt{grep -Ri exception /vagrant/results/ftp}
+        ensuring that command \command{grep -Ri exception /vagrant/results/ftp}
         does not print anything.
 
     \item[dacapo-h2] Run command
-        \texttt{/vagrant/experiments/dacapo-h2/run-quick.py}.  This runs the
+        \command{/vagrant/experiments/dacapo-h2/run-quick.py}.  This runs the
         experiment describe in Section~6.2 twice.  Running this set of
         experiments took around 3 minutes on a machine XXX.
 
         Once the experiment finishes, you can check that there are no errors
-        ensuring that command \texttt{grep -R FAIL /vagrant/results/dacapo-h2}
+        ensuring that command \command{grep -R FAIL /vagrant/results/dacapo-h2}
         does not print anything.
 
 \end{description}
 
 \subsubsection{XJ VM}
 
-About one minute on lugnut
+\begin{description}
+
+    \item[xj] Run command \command{/vagrant/experiments/xj/run-quick.py}.  This
+        runs an experiment for each cell of Table 4 twice.  Running this set of
+        experiments took around 3 minutes on a machine XXX.
+
+        Once the experiment finishes, you can check that there are no errors
+        ensuring that commands \command{grep -Ri exception \$HOME/results/xj} and
+        \command{grep -Ri differ \$HOME/results/xj} do not print anything.
+
+\end{description}
 
 \subsection{Paper run}
 \label{sec:paper-run}
 
-Don't forget about \emph{Benchmark failed to converge} for dacapo or dacapo-h2.
+Running the full set of results used for the paper is similar to running the
+quick results, described above.  The difference is that you will use scripts
+\texttt{run.py} instead of \texttt{run-quick.py} for each experiment.
+
+In the following, we provide the estimated time to run each experiment on a
+machine YYY with the Main VM extracted, as described in
+Section~\ref{sec:extract}.  We ran the \emph{xj} experiment inside the XJ VM.
 
 \begin{description}
 
-    \item[dacapo] Around 8h
+    \item[microbenchmark] Around 25h
+
+    \item[dacapo] Around 8h.  Depending on your setup, benchmark \texttt{h2} may
+        fail to converge.  When this happens, instead of it reporting a result,
+        it prints the following error:~\emph{Benchmark failed to converge}.
+        Extracting the artifact from the VM and pinning the benchmark to
+        specific cores, as described in Section~\ref{sec:extract}, should fix
+        this problem.
+
+    \item[stmbench7] TODO
+
+    \item[ftp] TODO
+
+    \item[xj] TODO
 
 \end{description}
 
 \section{Generate result tables}
 \label{sec:tables}
 
+The directory containing the scripts to run each experiment --- \texttt{run.py}
+and \texttt{run-quick.py} --- also contain scripts to generate the results
+tables found in Section 5 and 6.  The name of these scripts start with
+\texttt{table}.  For instance, to generate the tables for experiment
+\texttt{dacapo} run command\linebreak
+\command{/vagrant/experiments/dacapo/table-dacapo.py}.
+
+Each table script reads the results from the environment variable set up by
+\texttt{scripts/paths.sh}, processes them, and generates tables in CSV format in
+folder \texttt{tables}.
+
+We generated the tables on the paper manually from the CSV files, importing them
+first to spreadsheet software to help us in this task.  We recommend you do the
+same to visualize the results more easily.
+
+TODO map CSV cols to paper table cols
+
+\section{Algorithm location}
+\label{sec:algorithm}
+
+The code that implements the pseudo-code in Section~TODO can be found in folder
+\texttt{\$HOME/software/crochet/TODO}.  As explained in the paper, each class
+has two states:  \texttt{SLOW} or \texttt{FAST}.  The code for checkpoint,
+rollback, and read/write for each state can be found in methods TODO,
+respectively.
+
 \section{Run the artifact outside of the VM}
+\label{sec:extract}
 
 The XJ VM is not possible to run outside of its VM because the version of
 OpenJDK does not build successfully on modern systems.  We were able to build a
@@ -338,3 +454,4 @@ Pinning the experiments on cores on the same CPU ensures good quality results,
 with low noise.  We strongly recommend doing so, especially for NUMA machines.
 
 \end{document}
+
