@@ -16,10 +16,10 @@ $RES_TO_CSV $RESULTS_DIR/xj/default/xj-closedhashset      > $TMP_DIR/xj.csv
 
 pushd $TMP_DIR
 {
-    #TODO Call R script to generate table
-    Rscript $ROOT/experiments/xj/generateXJTable.r
+    # Call R script to generate table
+    Rscript $ROOT/experiments/xj/xj.r
+    mv xj-out.csv $TABLES_DIR/xj_table.csv
 }
 popd
 
-# rm -rf $TMP_DIR
-
+rm -rf $TMP_DIR
