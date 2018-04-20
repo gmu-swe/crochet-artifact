@@ -8,13 +8,15 @@
 
 \usepackage{url}
 \usepackage{hyperref}
-\usepackage{color}
+\usepackage{xcolor}
 \usepackage{soul}
 
 % Monotype font with bold for listings
 %\renewcommand{\ttdefault}{pcr}
 
 \newcommand{\command}[1]{\colorbox{black}{\texttt{\color{white}#1}}}
+\newcommand{\host}[1]{\colorbox{blue!20}{\texttt{\color{black}#1}}}
+\newcommand{\vm}[1]{\colorbox{green!20}{\texttt{\color{black}#1}}}
 \newcommand{\XXX}{\colorbox{red}{\bf\color{white}XXX}}
 
 \begin{document}
@@ -57,6 +59,10 @@ machine} is equipped with two Intel(R) Xeon(R) CPU E5-2650L v3 CPUs (12 physical
 cores per CPU, 24 logical per CPU, 48 total) and 128GB RAM, running GNU/Linux
 version 4.4.0-116-generic (Ubuntu 16.04.4 LTS).
 
+In terms of notation, commands to be executed on the VM look \command{like
+this}, files on the host machine look \host{like this}, and files on the VM look
+\vm{like this}.
+
 \section{Structure of this artifact}
 \label{sec:structure}
 
@@ -85,7 +91,7 @@ system, and you can find it on directory \XXX.  It's structure is as follows:
 
     \item[downloads] The artifact requires some files to be downloaded from the
         internet and saved here.  We already populated this directory for your
-        convenience.  File \texttt{scripts/downloads.sh} should be able to
+        convenience.  File \host{scripts/downloads.sh} should be able to
         re-download them if needed.
 
         \begin{itemize}
@@ -99,11 +105,11 @@ system, and you can find it on directory \XXX.  It's structure is as follows:
         \end{itemize}
 
     \item[scripts]  Several scripts and utilities used throughout the VM.  File
-        \texttt{scripts/path.sh} is of particular interest as it sets the
+        \host{scripts/path.sh} is of particular interest as it sets the
         environment used throughout the artifact.  Ensure that variable
         \texttt{GLOBAL\_JVM\_PARAMS} configures JVMs with a maximum heap size
         that fits in the memory you configured the artifact VM with, in file
-        \texttt{Vagrantfile} with parameter \texttt{vb.memory}.  We recommend at
+        \host{Vagrantfile} with parameter \texttt{vb.memory}.  We recommend at
         least 4GB with: \texttt{GLOBAL\_JVM\_PARAMS="-Xmx4G"}
 
     \item[experiments]  Each experiment reported in the paper has a
@@ -183,11 +189,11 @@ Section~\ref{sec:main}.
 
         \end{description}
 
-    \item[results]  Not used, moved to \texttt{\$HOME/results}.  See
+    \item[results]  Not used, moved to \vm{\$HOME/results}.  See
         Section~\ref{sec:sync} for the reasons behind this decision.
 
 
-    \item[tables]  Not used, moved to folder \texttt{\$HOME/tables}.  See
+    \item[tables]  Not used, moved to folder \vm{\$HOME/tables}.  See
         Section~\ref{sec:sync} for the reasons behind this decision.
 
 \end{description}
@@ -195,25 +201,25 @@ Section~\ref{sec:main}.
 \subsection{Folder synchronization between host and VM}
 \label{sec:sync}
 
-Vagrant mounts the directory that contains file \texttt{Vagrantfile} under
-\texttt{/vagrant} inside the VM.
+Vagrant mounts the directory that contains file \host{Vagrantfile} under
+\vm{/vagrant} inside the VM.
 
 On the Main VM, these two directories are synchronized in both directions:
 Writes from the host are visible inside the VM, and vice-versa.  Saving the
-results and tables in \texttt{/vagrant/results} and \texttt{/vagrant/tables}
-ensures that you can access them from the host on folders \texttt{results} and
-\texttt{tables} without needing to start the VM.
+results and tables in \vm{/vagrant/results} and \vm{/vagrant/tables}
+ensures that you can access them from the host on folders \host{results} and
+\host{tables} without needing to start the VM.
 
 Because of this synchronization, running some experiments from inside
-\texttt{/vagrant} will incur I/O overhead that skews results.  We recommend
-running all experiments from \texttt{\$HOME}.
+\vm{/vagrant} will incur I/O overhead that skews results.  We recommend
+running all experiments from \vm{\$HOME}.
 
 On the XJ VM, the two folders are synchronized only in one direction:  On VM
-startup, Vagrant overwrites the contents of \texttt{/vagrant} with the contents
-of the directory that contains file \texttt{Vagrantfile}.
+startup, Vagrant overwrites the contents of \vm{/vagrant} with the contents
+of the directory that contains file \host{Vagrantfile}.
 
 For the results and tables not to be lost between VM cycling, they can be found
-in folder \texttt{\$HOME/results} and \texttt{\$HOME/tables} inside the XJ VM.
+in folder \vm{\$HOME/results} and \vm{\$HOME/tables} inside the XJ VM.
 Unfortunately, you have to copy them manually to the host machine (e.g., by
 using \texttt{scp}).
 
@@ -222,21 +228,21 @@ using \texttt{scp}).
 
 This section explains how to provision each VM.
 
-Jon, create directory \texttt{repos} and run command
+Jon, create directory \host{repos} and run command
 \command{../scripts/populateRepos.sh} from it to clone all the private repos
 needed for the artifact. (delete this before sending the final version of this
 guide)
 
 \subsection{Main VM}
 
-Once you have configure file \texttt{Vagrantfile} and have all required
+Once you have configured file \host{Vagrantfile} and have all required
 downloaded files, as described in Section~\ref{sec:main}, simply run the command
 \command{vagrant up} from the directory \XXX.  Provisioning the Main VM took around 10
 minutes on the user machine.
 
 \subsection{XJ VM}
 
-Similar to the Main VM, once you have configure file \texttt{Vagrantfile} and
+Similar to the Main VM, once you have configure file \host{Vagrantfile} and
 have all required downloaded files, as described in Section~\ref{sec:xj}, simply
 run the command \command{vagrant up} from the directory \XXX.  Provisioning the
 Main VM took around 30 minutes on the user machine.
@@ -250,7 +256,7 @@ command \command{vagrant up}.  To stop a running VM, log-on and type \command{su
 poweroff}.  To suspend a running vm, use command \command{vagrant suspend}.
 
 To run any experiment, you should log-on to the VM and type command
-\texttt{source /vagrant/scripts/paths.sh} to set up the environment correctly.
+\command{source /vagrant/scripts/paths.sh} to set up the environment correctly.
 
 Please note, for the Main VM, that folder \command{/vagrant} is the same folder
 where you typed \command{vagrant up} on the host machine, and any changes between
@@ -259,7 +265,7 @@ inside the VM are automatically available to the host machine.
 
 Some experiments (e.g., DaCapo) write scratch results on the directory in which
 they are launched from.  Therefore, to avoid directory synchronization overhead,
-we recommend running the experiments from folder \texttt{\$HOME} on the
+we recommend running the experiments from folder \host{\$HOME} on the
 Main VM.
 
 For the XJ VM, these two folders are only synchronized from the host to the VM
@@ -399,8 +405,8 @@ tables found in Section 5 and 6.  The name of these scripts start with
 \command{/vagrant/experiments/dacapo/table-dacapo.py}.
 
 Each table script reads the results from the environment variable set up by
-\texttt{scripts/paths.sh}, processes them, and generates tables in CSV format in
-folder \texttt{tables}.
+\vm{/vagrant/scripts/paths.sh} / \host{scripts/paths.sh}, processes them, and
+generates tables in CSV format in folder \vm{/vagrant/tables} / \host{tables}.
 
 We generated the tables on the paper manually from the CSV files, importing them
 first to spreadsheet software to help us in this task.  We recommend you do the
@@ -412,7 +418,7 @@ same to visualize the results more easily.
 \label{sec:algorithm}
 
 The code that implements the pseudo-code in Section~\XXX can be found in folder
-\texttt{\$HOME/software/crochet/TODO}.  As explained in the paper, each class
+\vm{\$HOME/software/crochet/TODO}.  As explained in the paper, each class
 has two states:  \texttt{SLOW} or \texttt{FAST}.  The code for checkpoint,
 rollback, and read/write for each state can be found in methods \XXX,
 respectively.
@@ -431,27 +437,27 @@ Main VM directly on our test machine:
 
 \begin{enumerate}
 
-    \item In file \texttt{scripts/paths.sh}, configure all the build and install
+    \item In file \host{scripts/paths.sh}, configure all the build and install
         directories to reflect where you are building the artifact on your
         machine.
 
-    \item Source file \texttt{scripts/paths.sh} so set up the environment.  Note
+    \item Source file \host{scripts/paths.sh} so set up the environment.  Note
         that you will need to source this file after each time you modify it.
 
     \item The provisioning entry-point can be found at the end of file
-        \texttt{Vagrantfile}.  Follow those steps until you reach the invocation
+        \host{Vagrantfile}.  Follow those steps until you reach the invocation
         of script \texttt{build-all.sh}. The provisioning uses \texttt{apt-get}
         as the package manager, you need to change this to the package manager
         your distribution uses to install the same packages.
 
-    \item Follow each build script in folder \texttt{scripts/build} by the same
-        order in which script \texttt{scripts/build-all.sh} calls them.  Modify
+    \item Follow each build script in folder \host{scripts/build} by the same
+        order in which script \host{scripts/build-all.sh} calls them.  Modify
         the package manager commands and ensure all other commands work.  We
         advice going one file at the time, instead of blindly executing
-        \texttt{scripts/build-all.sh} to build everything in one go.
+        \host{scripts/build-all.sh} to build everything in one go.
 
     \item Adapt and execute all the commands in file
-        \texttt{scripts/pre-run.sh}.
+        \host{scripts/pre-run.sh}.
 
 \end{enumerate}
 
