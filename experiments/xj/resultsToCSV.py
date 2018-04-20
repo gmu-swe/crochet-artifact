@@ -2,6 +2,7 @@
 
 import sys
 import re
+import os
 
 def before_stats(line,results):
     if re.match('^-*$', line):
@@ -79,10 +80,14 @@ def parse_file(path):
 def parse_results(paths):
     results = {}
 
-    for res_file in paths:
-        f_res = parse_file(res_file)
-        if f_res is not None:
-            results[res_file] = f_res
+    for arg in paths:
+        res = []
+        for res_file in os.listdir(os.path.join(arg)):
+            if re.match('out-\d+\.txt', res_file):
+                f_res = parse_file(os.path.join(arg, res_file))
+                if f_res is not None:
+                    res = res + f_res
+        results[arg] = res
 
     return results
 

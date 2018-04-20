@@ -116,9 +116,9 @@ def workloads() :
         'default' : {
             'bin'   : '',
             'args'  : " -t 01"     # Number of threads
-                    + " -n 1"      # Number of executions to repeat
+                    + " -n 2"      # Number of executions to repeat
                     + " -d 100"    # Length (ms) of each execution
-                    + " -W 0"      # Warmup (sec)
+                    + " -W 1"      # Warmup (sec)
                     + " -s 0"      # Snapshot operations (%, leave at 0)
                     + " -a 0"      # Write-all operations (%, leave at 0)
                     + " -i 65536"  # Size of the datastructure

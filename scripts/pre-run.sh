@@ -4,7 +4,7 @@ source paths.sh
 
 # Install python packages needed
 sudo yum install -y epel-release
-sudo yum install -y python-monotonic
+sudo yum install -y python-monotonic R
 
 # Create directories to be populated later
 mkdir $CROCHET_CRIU_DIR
@@ -16,4 +16,5 @@ mkdir $TABLES_DIR
 # sudo add-apt-repository 'deb [arch=amd64,i386] https://cran.rstudio.com/bin/linux/ubuntu xenial/'
 # sudo apt-get update
 # sudo apt-get install -y r-base
-# sudo R -e 'install.packages(c("readr","mratios"))'
+echo 'options(repos=structure(c(CRAN="http://cran.us.r-project.org")))' > $HOME/.Rprofile
+sudo R -e 'install.packages(c("readr","mratios"))'
