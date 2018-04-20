@@ -1,6 +1,3 @@
-\title{CROCHET Artifact Guide}
-\author{Jonhattan Bell \and Lu\'{i}s Pina}
-\date{\today}
 
 \documentclass[12pt]{article}
 
@@ -10,6 +7,8 @@
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{soul}
+\usepackage{xspace}
+\usepackage[]{authblk}
 
 % Monotype font with bold for listings
 %\renewcommand{\ttdefault}{pcr}
@@ -18,12 +17,31 @@
 \newcommand{\host}[1]{\colorbox{blue!20}{\texttt{\color{black}#1}}}
 \newcommand{\vm}[1]{\colorbox{green!20}{\texttt{\color{black}#1}}}
 \newcommand{\XXX}{\colorbox{red}{\bf\color{white}XXX}}
+\newcommand{\sysname}{\textsc{Crochet}\xspace}
+\newcommand{\papertitle}{\sysname: Checkpoint and Rollback via Lightweight Heap Traversal on Stock JVMs\xspace}
+
+\title{\emph{\papertitle} \\ Artifact Guide}
+\author{Jonathan Bell and Lu\'{i}s Pina \\ \texttt{[bellj,lpina2]@gmu.edu}}
+\affil{George Mason University}
+\date{\today}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This is the paper's abstract \ldots
+
+    This guide covers the artifact for the paper \papertitle.
+
+    The artifact is composed of two Virtual Machines, which are provisioned by
+    Vagrant: one contains the bulk of the evaluation on an Ubuntu 16.04 image,
+    the other contains a single experiment on a Centos/7 image.
+
+    The guide allows to use the artifact to reproduce all tables on the paper,
+    and provide information about how to match the pseudo-code with the
+    prototype and how to extract the artifact from the VM to run it directly.
+    The artifact also builds most of the code neeeded from source, which enables
+    to use it to test modifications to \sysname with low effort.
+
 \end{abstract}
 
 \section{Introduction}
@@ -45,7 +63,7 @@ Section~\ref{sec:provision} describes how to provision each VM,
 Section~\ref{sec:run} describes how to run each experiment,
 Section~\ref{sec:tables} describes how to generate the tables on the paper from
 the results, Section~\ref{sec:algorithm} describes how to match the algorithm in
-Listings \XXX with Crochet's code, and Section~\ref{sec:extract} explains how to
+Listings \XXX with \sysname's code, and Section~\ref{sec:extract} explains how to
 extract the artifact from its VM to run the experiments directly.
 
 To \emph{``kick-the-tires''}, we recommend following:
