@@ -49,7 +49,7 @@ Vagrant.configure("2") do |config|
     # Display the VirtualBox GUI when booting the machine
     # vb.gui = true
 
-    vb.memory = 2048
+    vb.memory = 5000
     #vb.cpus   = 4
     vb.name   = "CROCHET Artifact"
   end

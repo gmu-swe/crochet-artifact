@@ -40,7 +40,7 @@ fieller = function(x, y) {
 }
 simpleMean = function(bm, con)
 {
-    if (nrow(subset(data, benchmark == bm & mode == con)) > 10) {
+    if (nrow(subset(data, benchmark == bm & mode == con)) >= 10) {
         ret <- t.test(subset(data, benchmark == bm & mode == con)$time)
         return(list(ci0 = ret$conf.int[1], ci1 = ret$conf.int[2], avg = ret$estimate))
     }
@@ -52,8 +52,8 @@ simpleMean = function(bm, con)
     }
 }
 calcMean = function(bm, con){
-    if (nrow(subset(data, benchmark == bm & mode == con)) > 10
-    && nrow(subset(data, benchmark == bm & mode == "native")) > 10) {
+    if (nrow(subset(data, benchmark == bm & mode == con)) >= 10
+    && nrow(subset(data, benchmark == bm & mode == "native")) >= 10) {
         ret <- t.test.ratio(x = subset(data, benchmark == bm & mode == con)$time, y = subset(data, benchmark == bm & mode == "native")$time, base = 1, na.rm = TRUE)
         return(list(ci0 = as.numeric(ret$conf.int[1]), ci1 = as.numeric(ret$conf.int[2]), avg = as.numeric(ret$estimate[3])))
     }
