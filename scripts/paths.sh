@@ -48,16 +48,16 @@ export MICROBENCH_BRANCH=master
 export MICROBENCH_DIR=$INSTALL_DIR/ClassChangeMicroBenchmarks
 
 # STM stuff
-export STMBENCH7_REPO=https://github.com/gmu-swe/jvstm-benchmarks.git
+export STMBENCH7_REPO=$REPOS_DIR/jvstm-benchmarks
 export STMBENCH7_BRANCH=checkpoint
 export STMBENCH7_JDK8_DIR=$INSTALL_DIR/stmbench7-jdk8
 export STMBENCH7_JDK7_DIR=$INSTALL_DIR/stmbench7-jdk7
 
-export JVSTM_REPO=https://github.com/inesc-id-esw/jvstm.git
+export JVSTM_REPO=$REPOS_DIR/jvstm
 export JVSTM_BRANCH=master
 export JVSTM_DIR=$INSTALL_DIR/jvstm
 
-export DEUCE_REPO=https://github.com/gmu-swe/DeuceSTM.git
+export DEUCE_REPO=$REPOS_DIR/DeuceSTM
 export DEUCE_BRANCH=master
 export DEUCE_DIR=$INSTALL_DIR/deuce
 
@@ -72,12 +72,12 @@ export CROSSFTP_BRANCH=crochet-1.07
 export CROSSFTP_DIR=$INSTALL_DIR/crossftp
 
 # METASPLOIT repo
-export METASPLOIT_REPO=https://github.com/gmu-swe/metasploit-framework.git
+export METASPLOIT_REPO=$REPOS_DIR/metasploit-framework
 export METASPLOIT_BRANCH=ftp-fuzz
 export METASPLOIT_DIR=$INSTALL_DIR/metasploit
 
 # H2 repo
-export H2_REPO=https://github.com/gmu-swe/h2database.git
+export H2_REPO=$REPOS_DIR/h2database
 export H2_BRANCH=release-1.2.121
 export H2_DIR=$INSTALL_DIR/h2
 
