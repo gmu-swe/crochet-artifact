@@ -66,15 +66,34 @@ def doRun(run, run_name, args, out, time, timeout):
     out.flush()
 
     start = monotonic()
-    if 'devnull' in run and run['devnull']:
-        with open('/dev/null', 'w') as devnull:
+    done = False
+
+    while not done:
+        if 'devnull' in run and run['devnull']:
+            with open('/dev/null', 'w') as devnull:
+                proc = subprocess.Popen(command, env=run_env,
+                        stdout=devnull, stderr=out, shell=True,
+                        preexec_fn=os.setsid)
+        else:
             proc = subprocess.Popen(command, env=run_env,
-                    stdout=devnull, stderr=out, shell=True,
+                    stdout=out, stderr=out, shell=True,
                     preexec_fn=os.setsid)
-    else:
-        proc = subprocess.Popen(command, env=run_env,
-                stdout=out, stderr=out, shell=True,
-                preexec_fn=os.setsid)
+
+        for t in range(0,timeout*4):
+            sleep(0.25)
+            if proc.poll() != None:
+                done = True
+                break
+
+        if not done:
+            os.killpg(os.getpgid(proc.pid), SIGKILL)
+            proc.wait()
+            with open('/dev/null', 'w') as devnull:
+                proc = subprocess.Popen('killall -KILL vx',
+                        stdout=devnull, stderr=devnull, shell=True,
+                        preexec_fn=os.setsid)
+            print("Retrying...")
+
 
     proc.wait()
     end = monotonic()
