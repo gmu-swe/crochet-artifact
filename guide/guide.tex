@@ -33,14 +33,14 @@
     This guide covers the artifact for the paper \papertitle.
 
     The artifact is composed of two Virtual Machines, which are provisioned by
-    Vagrant: one contains the bulk of the evaluation on an Ubuntu 16.04 image,
-    the other contains a single experiment on a Centos/7 image.
+    Vagrant: one (the primary artifact) contains the bulk of the evaluation on an Ubuntu 16.04 image,
+    the other (which involves reproducing other author's prior results) contains a single experiment on a Centos/7 image.
 
-    The guide allows to use the artifact to reproduce all tables on the paper,
+    The guide describes how to (mostly automatically) reproduce all of tables in the paper,
     and provides information about how to match the pseudo-code with the
     prototype and how to extract the artifact from the VM to run it directly.
     The artifact also builds most of the code neeeded from source, which enables
-    to use it to test modifications to \sysname with low effort.
+    to use it to test modifications to \sysname with low effort. \sysname also includes a suite of integration tests, which can be inspected and modified to demonstrate different behaviors.
 
 \end{abstract}
 
@@ -52,7 +52,7 @@ of two VMs which are set-up and provisioned using
 Vagrant.\footnote{\url{https://www.vagrantup.com/}}  You should install Vagrant
 and Virtualbox\footnote{\url{https://www.virtualbox.org/wiki/VirtualBox}} in
 your system.  We tested this artifact with Vagrant version 2.0.1 and Virtualbox
-version 5.2.4 on GNU/Linux version 4.14.13-1-ARCH (Arch Linux).
+version 5.2.4 on GNU/Linux version 4.14.13-1-ARCH (Arch Linux), but of course, expect it to work fine on any host OS.
 
 The sections on this paper are \emph{named} \ref{sec:first} through
 \ref{sec:last} to avoid any confusion with the sections on the paper, which are
@@ -63,7 +63,7 @@ Section~\ref{sec:provision} describes how to provision each VM,
 Section~\ref{sec:run} describes how to run each experiment,
 Section~\ref{sec:tables} describes how to generate the tables on the paper from
 the results, Section~\ref{sec:algorithm} describes how to match the algorithm in
-Listings \XXX with \sysname's code, and Section~\ref{sec:extract} explains how to
+Listings 1 and 2 with \sysname's code, and Section~\ref{sec:extract} explains how to
 extract the artifact from its VM to run the experiments directly.
 
 To \emph{``kick-the-tires''}, we recommend following:
@@ -89,7 +89,7 @@ this}, files on the host machine look \host{like this}, and files on the VM look
 
 The first VM is the Main VM that runs all the experiments except Table~4 on
 Section~5.3 on the paper.  It uses Ubuntu 16.04 LTS as the underlying operating
-system, and you can find it on directory \XXX.  It's structure is as follows:
+system, and you can find it in directory \XXX.  Its structure is as follows:
 
 \begin{description}
 
@@ -161,6 +161,7 @@ system, and you can find it on directory \XXX.  It's structure is as follows:
 \label{sec:xj}
 
 The second VM only runs the experiments for Table~4 in Section~5.2 of the paper.
+It is necessary to use this separate VM for this experiment because the subject of comparison (XJ) requires many particular dependency versions to compile and run.
 
 The structure of the VM is very similar to the Main VM, described in
 Section~\ref{sec:main}.
@@ -244,12 +245,7 @@ using \texttt{scp}).
 \section{Provision the VM}
 \label{sec:provision}
 
-This section explains how to provision each VM.
-
-Jon, create directory \host{repos} and run command
-\command{../scripts/populateRepos.sh} from it to clone all the private repos
-needed for the artifact. (delete this before sending the final version of this
-guide)
+This section explains how to provision each VM. When each VM is provisioned for the first time, a moderately-sized base image will be downloaded from Vagrant's repository for each (containing the base OS image for Ubuntu/Centos). Nothing is downloaded from any site that the author's have access to, and nothing is downloaded that is specific to this artifact.
 
 \subsection{Main VM}
 
@@ -260,18 +256,17 @@ minutes on the user machine.
 
 \subsection{XJ VM}
 
-Similar to the Main VM, once you have configure file \host{Vagrantfile} and
-have all required downloaded files, as described in Section~\ref{sec:xj}, simply
-run the command \command{vagrant up} from the directory \XXX.  Provisioning the
-Main VM took around 30 minutes on the user machine.
+Similar to the Main VM, once you have performed all configuration, for instance in  \host{Vagrantfile}, as described in Section~\ref{sec:xj}, simply
+run the command \command{vagrant up} from the directory \XXX.  This will download the base CentOS image from Vagrant and compile the artifact as needed. Provisioning the
+XJ VM took around 30 minutes on the user machine.
 
 \section{Run the experiments}
 \label{sec:run}
 
-To log-on a provisioned VM, use command \command{vagrant ssh}.  If a provisioned
+To log-on to a provisioned VM, use the command \command{vagrant ssh}, executed from the directory containing the artifact that you would like to connct to.  If a provisioned
 machine is not running (either is stopped or suspended), you can start it with
 command \command{vagrant up}.  To stop a running VM, log-on and type \command{sudo
-poweroff}.  To suspend a running vm, use command \command{vagrant suspend}.
+poweroff}.  To suspend a running vm, use command \command{vagrant suspend}. To remove all traces of a vm from your machine, use command \command{vagrant destroy}.
 
 To run any experiment, you should log-on to the VM and type command
 \command{source /vagrant/scripts/paths.sh} to set up the environment correctly.
@@ -282,7 +277,7 @@ these folders are synchronized.  As a result, results and tables generated
 inside the VM are automatically available to the host machine.
 
 Some experiments (e.g., DaCapo) write scratch results on the directory in which
-they are launched from.  Therefore, to avoid directory synchronization overhead,
+they are launched from.  Therefore, to avoid directory synchronization overhead (where the OS will constantly try to sync these temporary files),
 we recommend running the experiments from folder \host{\$HOME} on the
 Main VM.
 
@@ -435,6 +430,8 @@ same to visualize the results more easily.
 \section{Algorithm location}
 \label{sec:algorithm}
 
+When reviewing the algorithm presented in Listings 1 and 2, please note that there were several typos identified by us and the reviewers in the originally submitted version of \sysname. As of this writing, we are continuing to clarify the paper (in particular the argument for the thread safety of \sysname, which we agree is not presented as clearly as it could be). However, we have included with this artifact a revised version of the submitted paper with some of the errors corrected. Please use the included version of the paper for reference.
+
 The code that implements the pseudo-code in Section~\XXX can be found in folder
 \vm{\$HOME/software/crochet/TODO}.  As explained in the paper, each class
 has two states:  \texttt{SLOW} or \texttt{FAST}.  The code for checkpoint,
@@ -448,10 +445,10 @@ respectively.
 The XJ VM is not possible to run outside of its VM because the version of
 OpenJDK does not build successfully on modern systems.  We were able to build a
 version of XJ by working around the compiler errors, only to have it allocate
-all the memory available when code JIT compiling is on.
+all the memory available when code JIT compiling is on and eventually crash.
 
 We followed the following approach to execute the experiments provided by the
-Main VM directly on our test machine:
+Main VM directly on our test machine, which we provide for the benefit of interested reviewers:
 
 \begin{enumerate}
 
