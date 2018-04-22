@@ -55,7 +55,7 @@ and Virtualbox\footnote{\url{https://www.virtualbox.org/wiki/VirtualBox}} in
 your system.  We tested this artifact with Vagrant version 2.0.1 and Virtualbox
 version 5.2.4 on GNU/Linux version 4.14.13-1-ARCH (Arch Linux), but of course, expect it to work fine on any host OS.
 
-The sections on this paper are \emph{named} \ref{sec:first} through
+The sections on this guide are \emph{named} \ref{sec:first} through
 \ref{sec:last} to avoid any confusion with the sections on the paper, which are
 \emph{numbered} 1 through 8.
 
@@ -64,8 +64,10 @@ Section~\ref{sec:provision} describes how to provision each VM,
 Section~\ref{sec:run} describes how to run each experiment,
 Section~\ref{sec:tables} describes how to generate the tables on the paper from
 the results, Section~\ref{sec:algorithm} describes how to match the algorithm in
-Listings 1 and 2 with \sysname's code, and Section~\ref{sec:extract} explains how to
-extract the artifact from its VM to run the experiments directly.
+Listings 1 and 2 with \sysname's code, Section~\ref{sec:extract} explains how to
+extract the artifact from its VM to run the experiments directly, and
+Section~\ref{sec:tests} provides more detail in how to run \sysname outside the
+artifact and extend it.
 
 To \emph{``kick-the-tires''}, we recommend following:
 Section~\ref{sec:structure}, Section~\ref{sec:provision},
@@ -759,6 +761,8 @@ Pinning the experiments on cores on the same CPU ensures good quality results,
 with low noise.  We strongly recommend doing so, especially for NUMA machines.
 
 \section{Going beyond the benchmarks}
+\label{sec:tests}
+
 To run \sysname with an arbitrary java program, you'll need to use the instrumented JVM, and then specify \sysname's java agent, JVMTI agent, and boot classpath addon. In the VM, the appropriate syntax would be:
 \begin{verbatim}
 /home/ubuntu/software/crochet/target/jre-inst/bin/java \
