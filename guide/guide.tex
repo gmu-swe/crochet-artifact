@@ -85,12 +85,32 @@ this}, files on the host machine look \host{like this}, and files on the VM look
 \section{Structure of this artifact}
 \label{sec:structure}
 
+The artifact can be downloaded from the following URL:
+
+\href{https://gmuedu-my.sharepoint.com/:f:/g/personal/lpina2_gmu_edu/EjtsYtkTTgFMkESJoUzKEGoBOimnQf4B-9KIkhUTIb-_pw}{https://gmuedu-my.sharepoint.com/:f:/g/personal/lpina2\_gmu\_edu/\\EjtsYtkTTgFMkESJoUzKEGoBOimnQf4B-9KIkhUTIb-\_pw}
+
+It consists of the following files:
+
+\begin{description}
+
+    \item[main.zip] VM for the main artifact, MD5 \XXX
+
+    \item[xj.zip] VM for the XJ artifact, MD5 \XXX
+
+    \item[guide.pdf] This guide, MD5 \XXX
+
+    \item[paper.pdf] The latest version of the paper PDF, MD5 \XXX
+
+\end{description}
+
+
 \subsection{Main VM}
 \label{sec:main}
 
 The first VM is the Main VM that runs all the experiments except Table~4 on
 Section~5.3 on the paper.  It uses Ubuntu 16.04 LTS as the underlying operating
-system, and you can find it in directory \XXX.  Its structure is as follows:
+system, and you can find it in directory \host{main-vm} after unzipping the
+respective file.  Its structure is as follows:
 
 \begin{description}
 
@@ -163,7 +183,8 @@ system, and you can find it in directory \XXX.  Its structure is as follows:
 
 The second VM only runs the experiments for Table~4 in Section~5.2 of the paper.
 It is necessary to use this separate VM for this experiment because the subject of comparison (XJ) requires many particular dependency versions to compile and run.
-
+You can find it in directory \host{xj-vm} after unzipping the
+respective file.
 The structure of the VM is very similar to the Main VM, described in
 Section~\ref{sec:main}.
 
@@ -250,9 +271,9 @@ This section explains how to provision each VM. When each VM is provisioned for 
 
 \subsection{Main VM}
 
-Once you have configured file \host{Vagrantfile} and have all required
+Once you have configured file \host{main-vm/Vagrantfile} and have all required
 downloaded files, as described in Section~\ref{sec:main}, simply run the command
-\command{vagrant up} from the directory \XXX.  Provisioning the Main VM took around 10
+\command{vagrant up} from the directory \host{main-vm}.  Provisioning the Main VM took around 10
 minutes on the user machine.
 
 While the provisioning script runs, you may see little output. On our user machine the script showed no output for several minutes while at this step:
@@ -281,8 +302,8 @@ The full output from a successful completion of this step is included in this ar
 
 \subsection{XJ VM}
 
-Similar to the Main VM, once you have performed all configuration, for instance in  \host{Vagrantfile}, as described in Section~\ref{sec:xj}, simply
-run the command \command{vagrant up} from the directory \XXX.  This will download the base CentOS image from Vagrant and compile the artifact as needed. Provisioning the
+Similar to the Main VM, once you have performed all configuration, for instance in \host{xj-vm/Vagrantfile}, as described in Section~\ref{sec:xj}, simply
+run the command \command{vagrant up} from the directory \host{xj-vm}.  This will download the base CentOS image from Vagrant and compile the artifact as needed. Provisioning the
 XJ VM took around 30 minutes on the user machine.
 
 \section{Run the experiments}
@@ -303,7 +324,7 @@ inside the VM are automatically available to the host machine.
 
 Some experiments (e.g., DaCapo) write scratch results on the directory in which
 they are launched from.  Therefore, to avoid directory synchronization overhead (where the OS will constantly try to sync these temporary files),
-we recommend running the experiments from folder \host{\$HOME} on the
+we recommend running the experiments from folder \vm{\$HOME} on the
 Main VM.
 
 For the XJ VM, these two folders are only synchronized from the host to the VM
@@ -372,7 +393,7 @@ run  default check-no-sum-crochet 0 - 2018-04-21 15:22:19.913677
         ensuring that command \command{grep -R FAIL /vagrant/results/dacapo} does not
         print anything.  Note that benchmark \texttt{tradesoap} may fail
         non-deterministically even for the native case, and is not included on
-        the main results on Table 2; please ignore errors from this benchmark.
+        the main results on Table~2; please ignore errors from this benchmark.
 
 Sample output:
 \begin{verbatim}
@@ -643,11 +664,37 @@ For the FTP table (Table 5)
 
 When reviewing the algorithm presented in Listings 1 and 2, please note that there were several typos identified by us and the reviewers in the originally submitted version of \sysname. As of this writing, we are continuing to clarify the paper (in particular the argument for the thread safety of \sysname, which we agree is not presented as clearly as it could be). However, we have included with this artifact a revised version of the submitted paper with some of the errors corrected. Please use the included version of the paper for reference.
 
-The code that implements the pseudo-code in Section~\XXX can be found in folder
-\vm{\$HOME/software/crochet/TODO}.  As explained in the paper, each class
-has two states:  \texttt{SLOW} or \texttt{FAST}.  The code for checkpoint,
-rollback, and read/write for each state can be found in methods \XXX,
-respectively.
+The code that implements the pseudo-code in listings 1 and 2 in Section~3 can be
+found in file\\
+\vm{\$HOME/software/crochet/src/main/java/net/jonbell/crij/runtime/}\\\vm{CheckpointRollbackAgent.java}.
+As explained in the paper, each class has two states:  \texttt{SLOW} or
+\texttt{FAST}.  \sysname generates two versions for each class that call the
+following methods, which have a self-explanatory name: \texttt{fastOnRead},
+\texttt{fastOnWrite}, \texttt{fastOnCheckpoint}, and \texttt{fastOnRollback} for
+\texttt{FAST}; and \texttt{slowOnRead}, \texttt{slowOnWrite},
+\texttt{slowOnCheckpoint}, and \texttt{slowOnRollback} for \texttt{SLOW}.
+\sysname distinguishes \texttt{CHECKPOINT} or \texttt{ROLLBACK} states using
+odd versions for the former and even for the latter on the same \texttt{SLOW}
+state, as explained in Section~4.1. \XXX Jon, double check the \texttt{eager}
+methods.
+
+The real code uses \texttt{sun.misc.Unsafe}, we suggest the reader to get
+familiar with this API.  Consider reading the following resources first:
+
+\begin{itemize}
+
+    \item \url{http://www.luispina.me/2014/12/01/Unsafe_Rubah.html}
+
+    \item \href{https://docs.google.com/presentation/d/1-YwH1mBxwL9KTSXr8UyjsNnpMOtLKFe32ufMNaZKrpk/edit?usp=sharing}{https://docs.google.com/presentation/d/1-\\YwH1mBxwL9KTSXr8UyjsNnpMOtLKFe32ufMNaZKrpk/edit?usp=sharing}
+
+\end{itemize}
+
+Arrays in Java require special treatment, \sysname performs checkpoint/rollback
+on them eagerly.  It generates a wrapper that holds each array, and you can find
+the code for checkpoint/rollback that the wrapper uses on methods
+\texttt{\$\$crijCheckpoint} and \texttt{\$\$crijRollback} in file:
+
+\vm{\$HOME/software/crochet/src/main/java/net/jonbell/crij/runtime/}\\\vm{wrapper/ArrayWrapper.java}.
 
 \section{Run the artifact outside of the VM}
 \label{sec:extract}

@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/xenial64"
 
-  config.vm.hostname = "crochet-artifact"
+  config.vm.hostname = "crochet-artifact-paper"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -51,7 +51,7 @@ Vagrant.configure("2") do |config|
 
     vb.memory = 8192
     vb.cpus   = 2
-    vb.name   = "CROCHET Artifact"
+    vb.name   = "CROCHET Artifact paper"
   end
 
   # View the documentation for the provider you are using for more
