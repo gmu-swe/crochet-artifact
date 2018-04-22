@@ -245,7 +245,7 @@ using \texttt{scp}).
 \section{Provision the VM}
 \label{sec:provision}
 
-This section explains how to provision each VM. When each VM is provisioned for the first time, a moderately-sized base image will be downloaded from Vagrant's repository for each (containing the base OS image for Ubuntu/Centos). Nothing is downloaded from any site that the author's have access to, and nothing is downloaded that is specific to this artifact.
+This section explains how to provision each VM. When each VM is provisioned for the first time, a moderately-sized base image will be downloaded from Vagrant's repository for each (containing the base OS image for Ubuntu/Centos), and then various dependencies (e.g. python, java) will be installed in that VM. Nothing is downloaded from any site that the author's have access to, and nothing is downloaded that is specific to this artifact.
 
 \subsection{Main VM}
 
@@ -253,6 +253,30 @@ Once you have configured file \host{Vagrantfile} and have all required
 downloaded files, as described in Section~\ref{sec:main}, simply run the command
 \command{vagrant up} from the directory \XXX.  Provisioning the Main VM took around 10
 minutes on the user machine.
+
+While the provisioning script runs, you may see little output. On our user machine the script showed no output for several minutes while at this step:
+\begin{verbatim}
+	$ vagrant up
+Bringing machine 'default' up with 'virtualbox' provider...
+==> default: Importing base box 'ubuntu/xenial64'...
+==> default: Matching MAC address for NAT networking...
+==> default: Setting the name of the VM: CROCHET Artifact
+==> default: Clearing any previously set network interfaces...
+==> default: Preparing network interfaces based on configuration...
+    default: Adapter 1: nat
+==> default: Forwarding ports...
+    default: 22 (guest) => 2222 (host) (adapter 1)
+==> default: Running 'pre-boot' VM customizations...
+==> default: Booting VM...
+==> default: Waiting for machine to boot. This may take a few minutes...
+    default: SSH address: 127.0.0.1:2222
+    default: SSH username: ubuntu
+    default: SSH auth method: password
+\end{verbatim}
+
+If you abort the provisioning and the vm is stuck in an inconsistent state, simply run \command{vagrant destroy} then \command{vagrant up} again --- it will eliminate all traces of the VM and redeploy it.
+
+The full output from a successful completion of this step is included in this artifact in \command{sample\_output/C.1.txt}.
 
 \subsection{XJ VM}
 
@@ -317,13 +341,28 @@ overwrite any data left from the regular experiment.
         ensuring that command \command{grep -Ri exception /vagrant/results/microbenchmark}
         does not print anything.
 
-        Note that this quick run does not generate the full results, so the
+        Note that this quick run does not generate timed results, so the
         table generating scripts described in Section~\ref{sec:tables} will not
         work.  If you want to try those, set variable \texttt{GLOBAL\_TIMES} to
         2 in file \command{/vagrant/scripts/paths.sh}, reset the environment with
         command \command{source /vagrant/scripts/paths.sh} and do a paper run,
-        described in Section~\ref{sec:paper-run}.
+        described in Section~\ref{sec:paper-run} (doing a ``quick'' run will never be timed).
 
+Sample output:
+\begin{verbatim}
+	ubuntu@crochet-artifact:~$ /vagrant/experiments/microbenchmarks/run-quick.py 
+run  default no-check-no-sum-crochet 0 - 2018-04-21 14:55:08.343330
+run  default no-check-sum-crochet 0 - 2018-04-21 15:01:40.703791
+run  default check-sum-mapcloner 0 - 2018-04-21 15:08:40.625401
+run  default check-sum-crochet 0 - 2018-04-21 15:08:43.140047
+run  default check-sum-criu 0 - 2018-04-21 15:16:37.201023
+run  default check-sum-cloner 0 - 2018-04-21 15:22:04.713291
+run  default no-check-sum-native 0 - 2018-04-21 15:22:07.246505
+run  default check-sum-serial 0 - 2018-04-21 15:22:08.662749
+run  default no-check-no-sum-native 0 - 2018-04-21 15:22:12.861244
+run  default check-no-sum-serial 0 - 2018-04-21 15:22:14.369322
+run  default check-no-sum-crochet 0 - 2018-04-21 15:22:19.913677
+\end{verbatim}
     \item[dacapo] Run command \command{/vagrant/experiments/dacapo/run-quick.py}.
         This runs an experiment for each cell of Table 2 twice.  Running this
         set of experiments took around 5 minutes on the user machine.
@@ -334,6 +373,95 @@ overwrite any data left from the regular experiment.
         non-deterministically even for the native case, and is not included on
         the main results on Table \XXX; please ignore errors from this benchmark.
 
+Sample output:
+\begin{verbatim}
+	$ /vagrant/experiments/dacapo/run-quick.py 
+run  lusearch crochet-callback 0 - 2018-04-21 15:31:15.633116
+run  lusearch crochet-callback 1 - 2018-04-21 15:31:20.224062
+run  lusearch crochet 0 - 2018-04-21 15:31:24.570216
+run  lusearch crochet 1 - 2018-04-21 15:31:27.768157
+run  lusearch native 0 - 2018-04-21 15:31:31.117231
+run  lusearch native 1 - 2018-04-21 15:31:32.089161
+run  jython crochet-callback 0 - 2018-04-21 15:31:33.005707
+run  jython crochet-callback 1 - 2018-04-21 15:31:49.908328
+run  jython crochet 0 - 2018-04-21 15:32:05.451510
+run  jython crochet 1 - 2018-04-21 15:32:20.242040
+run  jython native 0 - 2018-04-21 15:32:35.466853
+run  jython native 1 - 2018-04-21 15:32:44.132977
+run  h2 crochet-callback 0 - 2018-04-21 15:32:52.475286
+run  h2 crochet-callback 1 - 2018-04-21 15:33:01.596768
+run  h2 crochet 0 - 2018-04-21 15:33:13.014452
+run  h2 crochet 1 - 2018-04-21 15:33:22.597781
+run  h2 native 0 - 2018-04-21 15:33:29.534477
+run  h2 native 1 - 2018-04-21 15:33:33.513940
+run  pmd crochet-callback 0 - 2018-04-21 15:33:37.649036
+run  pmd crochet-callback 1 - 2018-04-21 15:33:41.359983
+run  pmd crochet 0 - 2018-04-21 15:33:45.056416
+run  pmd crochet 1 - 2018-04-21 15:33:49.126815
+run  pmd native 0 - 2018-04-21 15:33:52.579549
+run  pmd native 1 - 2018-04-21 15:33:53.097625
+run  avrora crochet-callback 0 - 2018-04-21 15:33:53.624243
+run  avrora crochet-callback 1 - 2018-04-21 15:33:59.290246
+run  avrora crochet 0 - 2018-04-21 15:34:10.919440
+run  avrora crochet 1 - 2018-04-21 15:34:16.627932
+run  avrora native 0 - 2018-04-21 15:34:24.128653
+run  avrora native 1 - 2018-04-21 15:34:28.556114
+run  luindex crochet-callback 0 - 2018-04-21 15:34:32.484130
+run  luindex crochet-callback 1 - 2018-04-21 15:34:35.303964
+run  luindex crochet 0 - 2018-04-21 15:34:38.159890
+run  luindex crochet 1 - 2018-04-21 15:34:41.208146
+run  luindex native 0 - 2018-04-21 15:34:44.418504
+run  luindex native 1 - 2018-04-21 15:34:44.946866
+run  fop crochet-callback 0 - 2018-04-21 15:34:45.475395
+run  fop crochet-callback 1 - 2018-04-21 15:34:50.860446
+run  fop crochet 0 - 2018-04-21 15:34:55.952969
+run  fop crochet 1 - 2018-04-21 15:35:00.410421
+run  fop native 0 - 2018-04-21 15:35:05.310218
+run  fop native 1 - 2018-04-21 15:35:06.654539
+run  tomcat crochet-callback 0 - 2018-04-21 15:35:08.131654
+run  tomcat crochet-callback 1 - 2018-04-21 15:35:20.838379
+run  tomcat crochet 0 - 2018-04-21 15:35:32.784708
+run  tomcat crochet 1 - 2018-04-21 15:35:43.455865
+run  tomcat native 0 - 2018-04-21 15:35:53.880987
+run  tomcat native 1 - 2018-04-21 15:35:59.293353
+run  xalan crochet-callback 0 - 2018-04-21 15:36:04.558041
+run  xalan crochet-callback 1 - 2018-04-21 15:36:09.886822
+run  xalan crochet 0 - 2018-04-21 15:36:14.959994
+run  xalan crochet 1 - 2018-04-21 15:36:19.134873
+run  xalan native 0 - 2018-04-21 15:36:24.306002
+run  xalan native 1 - 2018-04-21 15:36:26.204972
+run  eclipse crochet-callback 0 - 2018-04-21 15:36:27.709454
+run  eclipse crochet-callback 1 - 2018-04-21 15:36:37.801094
+run  eclipse crochet 0 - 2018-04-21 15:36:47.278670
+run  eclipse crochet 1 - 2018-04-21 15:36:55.780299
+run  eclipse native 0 - 2018-04-21 15:37:03.103212
+run  eclipse native 1 - 2018-04-21 15:37:07.027437
+run  batik crochet-callback 0 - 2018-04-21 15:37:10.813552
+run  batik crochet-callback 1 - 2018-04-21 15:37:15.793239
+run  batik crochet 0 - 2018-04-21 15:37:22.031844
+run  batik crochet 1 - 2018-04-21 15:37:27.781765
+run  batik native 0 - 2018-04-21 15:37:33.936860
+run  batik native 1 - 2018-04-21 15:37:35.616666
+run  tradebeans crochet-callback 0 - 2018-04-21 15:37:37.196332
+run  tradebeans crochet-callback 1 - 2018-04-21 15:38:12.724596
+run  tradebeans crochet 0 - 2018-04-21 15:38:44.420048
+run  tradebeans crochet 1 - 2018-04-21 15:39:12.437559
+run  tradebeans native 0 - 2018-04-21 15:39:43.925629
+run  tradebeans native 1 - 2018-04-21 15:40:08.503967
+run  tradesoap crochet-callback 0 - 2018-04-21 15:40:44.629893
+run  tradesoap crochet-callback 1 - 2018-04-21 15:41:39.121657
+run  tradesoap crochet 0 - 2018-04-21 15:42:25.578833
+run  tradesoap crochet 1 - 2018-04-21 15:43:07.036773
+run  tradesoap native 0 - 2018-04-21 15:43:45.552659
+run  tradesoap native 1 - 2018-04-21 15:44:08.327795
+run  sunflow crochet-callback 0 - 2018-04-21 15:44:49.764407
+run  sunflow crochet-callback 1 - 2018-04-21 15:44:54.518710
+run  sunflow crochet 0 - 2018-04-21 15:44:58.131918
+run  sunflow crochet 1 - 2018-04-21 15:45:01.759463
+run  sunflow native 0 - 2018-04-21 15:45:04.668634
+run  sunflow native 1 - 2018-04-21 15:45:05.468218
+\end{verbatim}
+
     \item[stmbench7] Run command
         \command{/vagrant/experiments/stmbench7/run-quick.py}.  This runs an
         experiment for each cell of Table 3 twice.  Running this set of
@@ -343,6 +471,37 @@ overwrite any data left from the regular experiment.
         ensuring that command \command{grep -Ri exception /vagrant/results/stmbench7}
         does not print anything.
 
+Sample output:
+\begin{verbatim}
+$ /vagrant/experiments/stmbench7/run-quick.py
+run  rw-no-traversals deuce-tl2-notx 0 - 2018-04-21 15:51:43.285136
+run  rw-no-traversals deuce-tl2-notx 1 - 2018-04-21 15:51:49.020830
+run  rw-no-traversals deuce-tl2-checkpoint 0 - 2018-04-21 15:51:54.754906
+run  rw-no-traversals deuce-tl2-checkpoint 1 - 2018-04-21 15:51:59.947000
+run  rw-no-traversals crochet-nolock 0 - 2018-04-21 15:52:05.036420
+run  rw-no-traversals crochet-nolock 1 - 2018-04-21 15:52:12.351039
+run  rw-no-traversals deuce-lsa 0 - 2018-04-21 15:52:20.328280
+run  rw-no-traversals deuce-lsa 1 - 2018-04-21 15:52:25.939218
+run  rw-no-traversals jvstm-notx 0 - 2018-04-21 15:52:30.241208
+run  rw-no-traversals jvstm-notx 1 - 2018-04-21 15:52:39.549989
+run  rw-no-traversals jvstm-checkpoint 0 - 2018-04-21 15:52:48.165839
+run  rw-no-traversals jvstm-checkpoint 1 - 2018-04-21 15:52:58.028558
+run  rw-no-traversals deuce-lsa-checkpoint 0 - 2018-04-21 15:53:08.344633
+run  rw-no-traversals deuce-lsa-checkpoint 1 - 2018-04-21 15:53:13.690544
+run  rw-no-traversals deuce-tl2 0 - 2018-04-21 15:53:19.180774
+run  rw-no-traversals deuce-tl2 1 - 2018-04-21 15:53:24.683599
+run  rw-no-traversals native-nolock-jdk7 0 - 2018-04-21 15:53:29.880823
+run  rw-no-traversals native-nolock-jdk7 1 - 2018-04-21 15:53:34.931993
+run  rw-no-traversals jvstm 0 - 2018-04-21 15:53:41.258039
+run  rw-no-traversals jvstm 1 - 2018-04-21 15:53:53.462001
+run  rw-no-traversals deuce-lsa-notx 0 - 2018-04-21 15:54:03.639673
+run  rw-no-traversals deuce-lsa-notx 1 - 2018-04-21 15:54:08.284661
+run  rw-no-traversals crochet-nolock-checkpoint 0 - 2018-04-21 15:54:13.674983
+run  rw-no-traversals crochet-nolock-checkpoint 1 - 2018-04-21 15:54:23.145096
+run  rw-no-traversals native-nolock-jdk8 0 - 2018-04-21 15:54:32.034221
+run  rw-no-traversals native-nolock-jdk8 1 - 2018-04-21 15:54:37.989324
+\end{verbatim}
+
     \item[ftp] Run command
         \command{/vagrant/experiments/ftp/run-quick.py}.  This runs an
         experiment for each cell of Table 5 twice.  Running this set of
@@ -351,6 +510,19 @@ overwrite any data left from the regular experiment.
         Once the experiment finishes, you can check that there are no errors
         ensuring that command \command{grep -Ri exception /vagrant/results/ftp}
         does not print anything.
+        
+        Sample output:
+        \begin{verbatim}
+$ /vagrant/experiments/ftp/run-quick.py
+run  quick crochet-baseline 0 - 2018-04-21 15:55:32.939574
+run  quick crochet-baseline 1 - 2018-04-21 15:55:55.178914
+run  quick crochet 0 - 2018-04-21 15:56:09.519827
+run  quick crochet 1 - 2018-04-21 15:56:18.132656
+run  quick restart 0 - 2018-04-21 15:56:26.251934
+run  quick restart 1 - 2018-04-21 15:56:34.221001
+run  quick native 0 - 2018-04-21 15:56:42.533259
+run  quick native 1 - 2018-04-21 15:56:55.955284
+        \end{verbatim}
 
     \item[dacapo-h2] Run command
         \command{/vagrant/experiments/dacapo-h2/run-quick.py}.  This runs the
@@ -361,6 +533,16 @@ overwrite any data left from the regular experiment.
         ensuring that command \command{grep -R FAIL /vagrant/results/dacapo-h2}
         does not print anything.
 
+Sample output:
+\begin{verbatim}
+$ /vagrant/experiments/dacapo-h2/run-quick.py
+run  default native-sql 0 - 2018-04-21 15:57:47.207985
+run  default native-sql 1 - 2018-04-21 15:57:51.790658
+run  default crochet-sql 0 - 2018-04-21 15:57:56.684953
+run  default crochet-sql 1 - 2018-04-21 15:58:05.240117
+run  default crochet 0 - 2018-04-21 15:58:12.131372
+run  default crochet 1 - 2018-04-21 15:58:21.772960
+\end{verbatim}
 \end{description}
 
 \subsubsection{XJ VM}
@@ -375,6 +557,21 @@ overwrite any data left from the regular experiment.
         ensuring that commands \command{grep -Ri exception \$HOME/results/xj} and
         \command{grep -Ri differ \$HOME/results/xj} do not print anything.
 
+Sample output:
+\begin{verbatim}
+$ /vagrant/experiments/xj/run-quick.py
+run  default native-seqhashset 0 - 2018-04-21 16:25:26.026903
+run  default native-seqhashset 1 - 2018-04-21 16:25:26.113166
+run  default xj-closedhashset 0 - 2018-04-21 16:25:26.217164
+run  default xj-closedhashset 1 - 2018-04-21 16:25:26.226836
+run  default native-closedhashset 0 - 2018-04-21 16:25:26.235858
+run  default native-closedhashset 1 - 2018-04-21 16:25:26.341823
+run  default crochet-seqhashset 0 - 2018-04-21 16:25:26.459114
+run  default crochet-seqhashset 1 - 2018-04-21 16:25:27.511073
+run  default crochet-closedhashset 0 - 2018-04-21 16:25:28.524277
+run  default crochet-closedhashset 1 - 2018-04-21 16:25:29.476202
+\end{verbatim}
+
 \end{description}
 
 \subsection{Paper run}
@@ -388,6 +585,10 @@ In the following, we provide the time to run each experiment on the
 test machine with the Main VM extracted, as described in
 Section~\ref{sec:extract}.  We ran the \emph{xj} experiment inside the XJ VM.
 
+You can cut down the number of repetitions of each benchmark in order to reduce the time needed to run them. However, if you run less than 10 iterations it's unlikely that there will be sufficient samples to generate confidence intervals as presented in the paper. If you want to try this, set variable \texttt{GLOBAL\_TIMES} to
+        10 in file \command{/vagrant/scripts/paths.sh}, reset the environment with
+        command \command{source /vagrant/scripts/paths.sh} 
+
 \begin{description}
 
     \item[microbenchmark] Around 25h
@@ -397,7 +598,7 @@ Section~\ref{sec:extract}.  We ran the \emph{xj} experiment inside the XJ VM.
         it prints the following error:~\emph{Benchmark failed to converge}.
         Extracting the artifact from the VM and pinning the benchmark to
         specific cores, as described in Section~\ref{sec:extract}, should fix
-        this problem.
+        this problem. Note: `lusearch' may non-deterministically throw exceptions in \emph{all} configurations (e.g. not just with \sysname) in particularly resource constrained environments, like a VM with a single CPU and very little RAM. We have configured the VM to be allocated 4 CPUs and 8GB of RAM, which seems to allow it to pass consistently inside of the VM. 
 
     \item[stmbench7] \XXX
 
@@ -423,10 +624,17 @@ generates tables in CSV format in folder \vm{/vagrant/tables} / \host{tables}.
 
 We generated the tables on the paper manually from the CSV files, importing them
 first to spreadsheet software to help us in this task.  We recommend you do the
-same to visualize the results more easily.
+same to visualize the results more easily. These CSV files contain averages (`avg.') and confidence intervals for those averages (ranging from `ci0.' - `ci1.'). Each column in the CSV file has as a prefix the measurement (average value or confidence interval lower or upper bound) and as a suffix the configuration (normal for native, crij for \sysname, crijcb for \sysname with checkpoint, criu for CRIU).
 
-\XXX map CSV cols to paper table cols
+For the microbenchmarks table (Table 1):
+\XXX
 
+For the DaCapo table (Table 2): The columns
+
+For the STM table (Table 3)
+
+For the XJ table (Table 4): In the XJ VM, you'll find the result in \vm{~/tables} by default, after running \command{/vagrant/experiments/xj/table-xj.sh}. The ``native'' row in the CSV output corresponds to the SequentialHashIntSet row in Table 5, and the ``xj'' row in the CSV output corresponds to the ClosedHashIntSet row in Table 5. The next three columns provide the average and confidence interval for the number of operations performed on the baseline JVM; the next three provide the average and confidence interval for the \% of those operations performed by \sysname, and the final three columns provide the average and confidence interval for the \% of those operations performed by XJ.
+For the FTP table (Table 5)
 \section{Algorithm location}
 \label{sec:algorithm}
 
