@@ -707,11 +707,13 @@ encoded in the class being execute, as Section~4.1 describes.  Finally, lines
 10--11 map to lines 541--544 with the optimization described in Section~3.4
 applied.
 
-As another example, methods \texttt{cp.onCheckpoint} and
-\texttt{rb.onCheckpoint} both map to the same method \texttt{slowOnCheckpoint}.
-Depending on whether the version is even or odd, the prototype decides to run
-\texttt{cp.onCheckpoint}, on line 734; or the \texttt{rb.onCheckpoint}, on line
-726.  Note that the CAS on line 52 is not needed as both \texttt{CHECK} and
+As another example, methods \texttt{cp.onCheckpoint} and \texttt{cp.onRollback},
+\texttt{rb.onCheckpoint}, and \texttt{rb.onRollback} all map to the same method:
+\texttt{slowOnCheckpoint}.  Depending on whether the new version is even or odd,
+the prototype decides to run \texttt{.onCheckpoint}, on line 734; or the
+\texttt{.onRollback}, on line 726.  Then, depending on the current version of
+the object, the prototype decides to run \texttt{cp.} or \texttt{rb.} methods.
+Note that the CAS on line 52 is not needed as both \texttt{CHECK} and
 \texttt{ROLL} classes are represented by the same one class in the prototype.
 
 \section{Run the artifact outside of the VM}
