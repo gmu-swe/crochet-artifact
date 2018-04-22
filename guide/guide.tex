@@ -371,7 +371,7 @@ run  default check-no-sum-crochet 0 - 2018-04-21 15:22:19.913677
         ensuring that command \command{grep -R FAIL /vagrant/results/dacapo} does not
         print anything.  Note that benchmark \texttt{tradesoap} may fail
         non-deterministically even for the native case, and is not included on
-        the main results on Table \XXX; please ignore errors from this benchmark.
+        the main results on Table 2; please ignore errors from this benchmark.
 
 Sample output:
 \begin{verbatim}
@@ -626,6 +626,8 @@ We generated the tables on the paper manually from the CSV files, importing them
 first to spreadsheet software to help us in this task.  We recommend you do the
 same to visualize the results more easily. These CSV files contain averages (`avg.') and confidence intervals for those averages (ranging from `ci0.' - `ci1.'). Each column in the CSV file has as a prefix the measurement (average value or confidence interval lower or upper bound) and as a suffix the configuration (normal for native, crij for \sysname, crijcb for \sysname with checkpoint, criu for CRIU).
 
+\textbf{Our script will only generate confidence intervals if there are at least 10 valid observations from that benchmark.} This means that if you run a benchmark 10 times, and it fails to converge to a stable execution time several times, the generated table will not have confidence intervals for that benchmark. We had no difficulties ensuring that the benchmarks always converged to a stable time when we ran them \emph{outside} of the VM, \emph{and} when we pinned them to the same physical CPU cores. However, running them inside of the VM may result in too much noise for them to converge.
+
 For the microbenchmarks table (Table 1):
 \XXX
 
@@ -693,5 +695,75 @@ place to place commands to pin process to particular CPUs (e.g.,
 Pinning the experiments on cores on the same CPU ensures good quality results,
 with low noise.  We strongly recommend doing so, especially for NUMA machines.
 
+\section{Going beyond the benchmarks}
+To run \sysname with an arbitrary java program, you'll need to use the instrumented JVM, and then specify \sysname's java agent, JVMTI agent, and boot classpath addon. In the VM, the appropriate syntax would be:
+\begin{verbatim}
+/home/ubuntu/software/crochet/target/jre-inst/bin/java \
+-Xmx4G -agentpath:/home/ubuntu/software/crochet/target/libtagging.so\
+-javaagent:/home/ubuntu/software/crochet/target/CRIJ-0.0.1-SNAPSHOT.jar\
+-Xbootclasspath/p:/home/ubuntu/software/crochet/target/CRIJ-0.0.1-SNAPSHOT.jar\
+ ...rest of your java command.	
+\end{verbatim}
+ 
+ 
+ Perhaps the easiest way to experiment with \sysname is using the integrated test suite and test suite runner. \sysname is a maven project, and is configured to run validation tests when you invoke \command{mvn verify}. You can inspect the test cases and add new ones (just make sure that the test class names end with \texttt{ITCase}. You can then use the \texttt{CheckpointRollbackAgent} API to checkpoint or rollback objects. The easiest way is to (as most of the test cases do) first generate a new and valid version number to use (e.g. \texttt{		int v = getNewVersionForCheckpoint();}) and then simply call \texttt{checkpoint} or \texttt{rollback} on objects that you are interested in testing on. For instance, the test \texttt{ArrayCheckpointRollbackITCase\#testPrimitiveArray} tests the correct handling of primitive arrays in \sysname (which require special handling compared to other objects).
+ 
+The expected output of running \command{mvn verify} is (only including test results for brevity):
+\begin{scriptsize}
+\begin{verbatim}
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running net.jonbell.crij.test.LinkedListITCase
+Testing list of size three, no nesting:  0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
+Testing list of size three, nesting one:  0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
+Testing list of size three, nesting two:  0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
+Testing list of size four, no nesting:  0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49
+Testing list of size four, nesting one:  0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49
+Testing list of size four, nesting two:  0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49
+Testing list of size one, no nesting:  0 1 2 3 4 5
+Testing list of size one, nesting one:  0 1 2 3 4 5
+Testing list of size one, nesting two:  0 1 2 3 4 5
+Testing list of size two, no nesting:  0 1 2 3 4 5 6 7 8 9
+Testing list of size two, nesting one:  0 1 2 3 4 5 6 7 8 9
+Testing list of size two, nesting two:  0 1 2 3 4 5 6 7 8 9
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.362 sec - in net.jonbell.crij.test.LinkedListITCase
+Running net.jonbell.crij.test.CheckpointRollbackITCase
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.2 sec - in net.jonbell.crij.test.CheckpointRollbackITCase
+CP found testRBInSameMethod()V
+CP found testRBInOtherMethod()V
+CP found doStaticTest()V
+CP found testRBInOtherStaticMethod()V
+CP found foos()V
+CP found foo()V
+Running net.jonbell.crij.test.SimpleStackModeAutoCPITCase
+Version: 4
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.974 sec - in net.jonbell.crij.test.SimpleStackModeAutoCPITCase
+Running net.jonbell.crij.test.ClassLoaderITCase
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.104 sec - in net.jonbell.crij.test.ClassLoaderITCase
+Running net.jonbell.crij.test.ReflectionITCase
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.397 sec - in net.jonbell.crij.test.ReflectionITCase
+Running net.jonbell.crij.test.TaggingITCase
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.304 sec - in net.jonbell.crij.test.TaggingITCase
+Running net.jonbell.crij.test.SimpleStackModeITCase
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.773 sec - in net.jonbell.crij.test.SimpleStackModeITCase
+Running net.jonbell.crij.test.AliasingITCase
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.05 sec - in net.jonbell.crij.test.AliasingITCase
+Running net.jonbell.crij.test.FlatNestingITCase
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.289 sec - in net.jonbell.crij.test.FlatNestingITCase
+Running net.jonbell.crij.test.StartCheckpointITCase
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.335 sec - in net.jonbell.crij.test.StartCheckpointITCase
+Running net.jonbell.crij.test.AliasingStressITCase
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.422 sec - in net.jonbell.crij.test.AliasingStressITCase
+Running net.jonbell.crij.test.ArrayCheckpointRollbackITCase
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.61 sec - in net.jonbell.crij.test.ArrayCheckpointRollbackITCase
+Running net.jonbell.crij.test.ObjectFieldITCase
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.764 sec - in net.jonbell.crij.test.ObjectFieldITCase
+
+Results :
+
+Tests run: 40, Failures: 0, Errors: 0, Skipped: 4
+\end{verbatim}
+\end{scriptsize}
 \end{document}
 
