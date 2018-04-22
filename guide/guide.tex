@@ -652,15 +652,18 @@ same to visualize the results more easily. These CSV files contain averages (`av
 
 \textbf{Our script will only generate confidence intervals if there are at least 10 valid observations from that benchmark.} This means that if you run a benchmark 10 times, and it fails to converge to a stable execution time several times, the generated table will not have confidence intervals for that benchmark. We had no difficulties ensuring that the benchmarks always converged to a stable time when we ran them \emph{outside} of the VM, \emph{and} when we pinned them to the same physical CPU cores. However, running them inside of the VM may result in too much noise for them to converge.
 
-For the microbenchmarks table (Table 1):
-\XXX
+For the microbenchmarks table (Table 1): The ``normal'' set of columns are the runtime in nanoseconds; ``crij'' is the relative slowdown of \sysname, ``crijcb'' is the relative slowdown of \sysname with checkpoint, ``cloner'' is the relative slowdown of the deepcloner system, and the last 3 columns are the relative slowdown of CRIU.
 
-For the DaCapo table (Table 2): The columns
+For the DaCapo table (Table 2): The ``normal'' set of columns are the runtime in milliseconds, ``crij'' is the relative slowdown of \sysname, ``crijcb'' is the relative slowdown of \sysname with checkpoint called, and ``criu'' is the relative slowdown of CRIU.
 
-For the STM table (Table 3)
+For the STM table (Table 3): The ``normal'' set of columns are the number of completed operations in the baseline, ``notx,'' ``onetx'' and ``manytx'' correspond to the next three sets of columns in the table (percent of operations completed).
 
 For the XJ table (Table 4): In the XJ VM, you'll find the result in \vm{~/tables} by default, after running \command{/vagrant/experiments/xj/table-xj.sh}. The ``native'' row in the CSV output corresponds to the SequentialHashIntSet row in Table 5, and the ``xj'' row in the CSV output corresponds to the ClosedHashIntSet row in Table 5. The next three columns provide the average and confidence interval for the number of operations performed on the baseline JVM; the next three provide the average and confidence interval for the \% of those operations performed by \sysname, and the final three columns provide the average and confidence interval for the \% of those operations performed by XJ.
-For the FTP table (Table 5)
+
+For the FTP table (Table 5): The first three columns represent the execution time in milliseconds. The next three columns represent the relative slowdown.
+
+For the result in 6.2 on Dacapo-H2: the dacapoh2 generated table contains the average time (and standard deviation) for the baseline (``normal''), \sysname without checkpoint (``crochet-no-checkpoint''), and using \sysname to do the checkpoint and rollback (``crochet'').
+
 \section{Algorithm location}
 \label{sec:algorithm}
 
@@ -677,8 +680,7 @@ following methods, which have a self-explanatory name: \texttt{fastOnRead},
 \texttt{slowOnCheckpoint}, and \texttt{slowOnRollback} for \texttt{SLOW}.
 \sysname distinguishes \texttt{CHECKPOINT} or \texttt{ROLLBACK} states using
 odd versions for the former and even for the latter on the same \texttt{SLOW}
-state, as explained in Section~4.1. \XXX Jon, double check the \texttt{eager}
-methods.
+state, as explained in Section~4.1.
 
 The real code uses \texttt{sun.misc.Unsafe}, we suggest the reader to get
 familiar with this API.  Consider reading the following resources first:
