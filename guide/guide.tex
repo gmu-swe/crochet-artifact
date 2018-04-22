@@ -395,6 +395,8 @@ run  default check-no-sum-crochet 0 - 2018-04-21 15:22:19.913677
         non-deterministically even for the native case, and is not included on
         the main results on Table~2; please ignore errors from this benchmark.
 
+        Note: `lusearch' may non-deterministically throw exceptions in \emph{all} configurations (i.e., not just with \sysname) in particularly resource constrained environments, like a VM with a single CPU and very little RAM. We have configured the VM to be allocated 4 CPUs and 8GB of RAM, which seems to allow it to pass consistently inside of the VM. 
+
 Sample output:
 \begin{verbatim}
 	$ /vagrant/experiments/dacapo/run-quick.py 
@@ -620,9 +622,9 @@ You can cut down the number of repetitions of each benchmark in order to reduce 
         it prints the following error:~\emph{Benchmark failed to converge}.
         Extracting the artifact from the VM and pinning the benchmark to
         specific cores, as described in Section~\ref{sec:extract}, should fix
-        this problem. Note: `lusearch' may non-deterministically throw exceptions in \emph{all} configurations (e.g. not just with \sysname) in particularly resource constrained environments, like a VM with a single CPU and very little RAM. We have configured the VM to be allocated 4 CPUs and 8GB of RAM, which seems to allow it to pass consistently inside of the VM. 
+        this problem.
 
-    \item[stmbench7] \XXX
+    \item[stmbench7] Around 2h30m
 
     \item[ftp] \XXX
 
