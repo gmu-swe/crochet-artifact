@@ -15,6 +15,11 @@ def doRun(run, run_name, args, out, time, timeout):
         with open('/dev/null', 'w') as devnull:
             subprocess.Popen(clean, stdout=devnull, stderr=devnull, shell=True)
 
+    if 'clean' in run:
+        for clean in run['clean']:
+            with open('/dev/null', 'w') as devnull:
+                subprocess.Popen(clean, stdout=devnull, stderr=devnull, shell=True)
+
     if 'bin' in args and args['bin'] is not '':
         bin = os.path.join(run['cmd'], args['bin'])
     else:
