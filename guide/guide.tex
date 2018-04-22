@@ -55,7 +55,7 @@ and Virtualbox\footnote{\url{https://www.virtualbox.org/wiki/VirtualBox}} in
 your system.  We tested this artifact with Vagrant version 2.0.1 and Virtualbox
 version 5.2.4 on GNU/Linux version 4.14.13-1-ARCH (Arch Linux), but of course, expect it to work fine on any host OS.
 
-The sections on this paper are \emph{named} \ref{sec:first} through
+The sections on this guide are \emph{named} \ref{sec:first} through
 \ref{sec:last} to avoid any confusion with the sections on the paper, which are
 \emph{numbered} 1 through 8.
 
@@ -64,8 +64,10 @@ Section~\ref{sec:provision} describes how to provision each VM,
 Section~\ref{sec:run} describes how to run each experiment,
 Section~\ref{sec:tables} describes how to generate the tables on the paper from
 the results, Section~\ref{sec:algorithm} describes how to match the algorithm in
-Listings 1 and 2 with \sysname's code, and Section~\ref{sec:extract} explains how to
-extract the artifact from its VM to run the experiments directly.
+Listings 1 and 2 with \sysname's code, Section~\ref{sec:extract} explains how to
+extract the artifact from its VM to run the experiments directly, and
+Section~\ref{sec:tests} provides more detail in how to run \sysname outside the
+artifact and extend it.
 
 To \emph{``kick-the-tires''}, we recommend following:
 Section~\ref{sec:structure}, Section~\ref{sec:provision},
@@ -85,21 +87,17 @@ this}, files on the host machine look \host{like this}, and files on the VM look
 \section{Structure of this artifact}
 \label{sec:structure}
 
-The artifact can be downloaded from the following URL:
-
-\href{https://gmuedu-my.sharepoint.com/:f:/g/personal/lpina2_gmu_edu/EjtsYtkTTgFMkESJoUzKEGoBOimnQf4B-9KIkhUTIb-_pw}{https://gmuedu-my.sharepoint.com/:f:/g/personal/lpina2\_gmu\_edu/\\EjtsYtkTTgFMkESJoUzKEGoBOimnQf4B-9KIkhUTIb-\_pw}
-
-It consists of the following files:
+The artifact consists of the following files and folders:
 
 \begin{description}
 
-    \item[main.zip] VM for the main artifact, MD5 \XXX
+    \item[main-vm] VM for the main artifact
 
-    \item[xj.zip] VM for the XJ artifact, MD5 \XXX
+    \item[xj-vm] VM for the XJ artifact
 
-    \item[guide.pdf] This guide, MD5 \XXX
+    \item[guide.pdf] This guide
 
-    \item[paper.pdf] The latest version of the paper PDF, MD5 \XXX
+    \item[paper.pdf] The latest version of the paper PDF
 
 \end{description}
 
@@ -709,11 +707,13 @@ encoded in the class being execute, as Section~4.1 describes.  Finally, lines
 10--11 map to lines 541--544 with the optimization described in Section~3.4
 applied.
 
-As another example, methods \texttt{cp.onCheckpoint} and
-\texttt{rb.onCheckpoint} both map to the same method \texttt{slowOnCheckpoint}.
-Depending on whether the version is even or odd, the prototype decides to run
-\texttt{cp.onCheckpoint}, on line 734; or the \texttt{rb.onCheckpoint}, on line
-726.  Note that the CAS on line 52 is not needed as both \texttt{CHECK} and
+As another example, methods \texttt{cp.onCheckpoint} and \texttt{cp.onRollback},
+\texttt{rb.onCheckpoint}, and \texttt{rb.onRollback} all map to the same method:
+\texttt{slowOnCheckpoint}.  Depending on whether the new version is even or odd,
+the prototype decides to run \texttt{.onCheckpoint}, on line 734; or the
+\texttt{.onRollback}, on line 726.  Then, depending on the current version of
+the object, the prototype decides to run \texttt{cp.} or \texttt{rb.} methods.
+Note that the CAS on line 52 is not needed as both \texttt{CHECK} and
 \texttt{ROLL} classes are represented by the same one class in the prototype.
 
 \section{Run the artifact outside of the VM}
@@ -763,6 +763,8 @@ Pinning the experiments on cores on the same CPU ensures good quality results,
 with low noise.  We strongly recommend doing so, especially for NUMA machines.
 
 \section{Going beyond the benchmarks}
+\label{sec:tests}
+
 To run \sysname with an arbitrary java program, you'll need to use the instrumented JVM, and then specify \sysname's java agent, JVMTI agent, and boot classpath addon. In the VM, the appropriate syntax would be:
 \begin{verbatim}
 /home/ubuntu/software/crochet/target/jre-inst/bin/java \

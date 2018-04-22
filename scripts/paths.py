@@ -45,6 +45,8 @@ crochetdir = getenv('CROCHET_DIR')
 
 dacapojar = getenv('DACAPO_JAR')
 
+criudir = getenv('CROCHET_CRIU_DIR')
+
 # metasploit
 metasploitdir = getenv('METASPLOIT_DIR')
 

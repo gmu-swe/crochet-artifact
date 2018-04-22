@@ -20,6 +20,7 @@ vmargs="{}".format(globalJvmParams)
 run_native="{jdk}/bin/java {vmargs} {{benchvmargs}} -Xbootclasspath/p:{crochet}/exp-scripts/lib/dacapo-eclipse-hacker-0.0.1-SNAPSHOT.jar -cp {dacapojar} Harness {args}"
 run_crochet="{crochet}/target/jre-inst/bin/java {{benchvmargs}} {vmargs} -agentpath:{crochet}/target/libtagging.so -javaagent:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -Xbootclasspath/p:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar:{crochet}/exp-scripts/lib/dacapo-eclipse-hacker-0.0.1-SNAPSHOT.jar -cp {dacapojar} Harness {args}"
 run_crochet_cb="{crochet}/target/jre-inst/bin/java {{benchvmargs}} {vmargs} -agentpath:{crochet}/target/libtagging.so -javaagent:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar -Xbootclasspath/p:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar:{crochet}/exp-scripts/lib/dacapo-eclipse-hacker-0.0.1-SNAPSHOT.jar -cp {dacapojar}:{crochet}/exp-scripts/lib/CRIJ-dacapoCB-0.0.1-SNAPSHOT.jar Harness {args}"
+run_criu_cb="{jdk}/bin/java {{benchvmargs}} {vmargs} -Xbootclasspath/p:{crochet}/target/CRIJ-0.0.1-SNAPSHOT.jar:{crochet}/exp-scripts/lib/dacapo-eclipse-hacker-0.0.1-SNAPSHOT.jar -agentpath:{crochet}/target/libcriu.so -cp {dacapojar}:{crochet}/exp-scripts/lib/CRIJ-dacapoCB-0.0.1-SNAPSHOT.jar Harness {args}"
 
 def workloads() :
     return {
@@ -101,7 +102,7 @@ def workloads() :
         'tradesoap' : {
             'bin'   : '',
             'args'  : "tradesoap",
-            'clean' : [ 'rm -rf /experiments/luis-crochet/crochet-artifact/scratch' ],
+            'clean' : [ 'rm -rf scratch' ],
             'env'   : { }
             } ,
         'xalan' : {
@@ -145,6 +146,17 @@ def runs() :
                 args='--variance 2.0 -C -n 50 -c net.jonbell.crij.CheckpointingCB',
                 dacapojar=dacapojar),
             'wrap' : '{}'.format(pin),
+            'env'  : { },
+            },
+        'criu-callback' : {
+            'cmd'  : run_criu_cb.format(
+                jdk=jdk8dir,
+                crochet=crochetdir,
+                vmargs=vmargs,
+                args='--variance 2.0 -C -n 50 -c net.jonbell.crij.CRIUCB',
+                dacapojar=dacapojar),
+            'clean' : [ 'sudo rm -rf {}/*'.format(criudir) ],
+            'wrap' : 'sudo -E {}'.format(pin),
             'env'  : { },
             },
        }
