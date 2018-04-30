@@ -17,4 +17,4 @@ mkdir $TABLES_DIR
 # sudo apt-get update
 # sudo apt-get install -y r-base
 echo 'options(repos=structure(c(CRAN="http://cran.us.r-project.org")))' > $HOME/.Rprofile
-sudo R -e 'install.packages(c("readr","mratios"))'
+sudo R -e 'install.packages(c("readr","mratios"), repos=c(CRAN="http://cran.us.r-project.org"))'
