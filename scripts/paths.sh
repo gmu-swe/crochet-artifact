@@ -7,7 +7,7 @@ export ROOT=/vagrant
 export DOWNLOAD_DIR=$ROOT/downloads
 
 # Where everything is installed
-export INSTALL_DIR=/home/ubuntu/software
+export INSTALL_DIR=$HOME/software
 
 # Results directory
 export RESULTS_DIR=$ROOT/results
