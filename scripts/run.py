@@ -97,7 +97,7 @@ def doRun(run, run_name, args, out, time, timeout):
                 proc = subprocess.Popen('killall -KILL vx',
                         stdout=devnull, stderr=devnull, shell=True,
                         preexec_fn=os.setsid)
-            print("Retrying...")
+            print("Retrying...  {}".format(datetime.datetime.now()))
 
 
     proc.wait()
